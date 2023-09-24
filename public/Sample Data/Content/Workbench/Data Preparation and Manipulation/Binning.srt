@@ -1,0 +1,200 @@
+1
+00:00:00,000 --> 00:00:02,089
+The Binning block
+
+2
+00:00:02,089 --> 00:00:10,501
+At this stage all transactions have been merged, summarised and enriched with demographic detail but there may be a need to process the data further.
+
+3
+00:00:10,501 --> 00:00:15,934
+The data preparation group contains a block that can assist,  the Binning block.
+
+4
+00:00:15,934 --> 00:00:23,457
+The block is dragged onto the resulting dataset, connected, and double-clicked to access its configuration dialog.
+
+5
+00:00:23,457 --> 00:00:28,708
+The binning block can be used to create categories or bins for any variable.
+
+6
+00:00:28,708 --> 00:00:31,921
+The dialog has a number of areas.
+
+7
+00:00:31,921 --> 00:00:41,064
+First a variable to bin must be selected by moving it from the Unselected Variables list to the Selected Variables list, here tot_price_sum is chosen.
+
+8
+00:00:41,064 --> 00:00:45,922
+The binned variable is the variable that will be created and can be renamed.
+
+9
+00:00:45,922 --> 00:00:58,017
+Once selected there are four binning types to choose from: Optimal, Equal Width, Equal Height and Winsorised. Options for each can be set from Binning Preferences accessible by clicking the gears icons.
+
+10
+00:00:58,017 --> 00:01:07,055
+The Default bin count and Winsorrate values applies to Equal Height, Equal Width and Winsorised binning and the optimal Binning settings apply to the option Optimal.
+
+11
+00:01:07,055 --> 00:01:14,134
+Equal height binning attempts to create n equally populated bins, whereas equal width creates bins with the same width.
+
+12
+00:01:14,134 --> 00:01:26,072
+Winsorised binning removes a proportion of the largest and smallest values, here 20%, equal width bins are calculated and the removed observations are returned to the first and last bins respectively.
+
+13
+00:01:26,072 --> 00:01:30,879
+This ensures that the first and last bins are adequately populated.
+
+14
+00:01:30,879 --> 00:01:43,313
+Optimal binning settings include the ability to choose the measure, specify the starting and maximum number of bins to create, and deal with missing values. Also whether to force monotonicity.
+
+15
+00:01:43,313 --> 00:01:48,485
+There are also options to ensure resulting bins are adequate in terms of size.
+
+16
+00:01:48,485 --> 00:01:54,154
+The binning type "Optimal" requires selection of a Dependent variable and its treatment.
+
+17
+00:01:54,154 --> 00:02:00,789
+Here, there is interest in creating a new variable that re-cords whether total price sum is either low or high.
+
+18
+00:02:00,789 --> 00:02:09,644
+A good place to start is to choose Equal Height as the Binning type. From Binning Preferences, the default bin count is set to 2.
+
+19
+00:02:09,644 --> 00:02:16,515
+The Bin Variables button is clicked and this generates bins for the selected variable with bin cut points visible.
+
+20
+00:02:16,515 --> 00:02:26,702
+The Bin Statistics area relays the size and % of each bin in a frequency table. The view can be changed by hovering and selecting an appropriate icon.
+
+21
+00:02:26,702 --> 00:02:30,803
+Here, the icon "Show as frequency chart" is selected.
+
+22
+00:02:30,803 --> 00:02:40,756
+This view shows how the created bins are distributed across the variable "tot_ price_ sum". Bear in mind this is the variable that binning is based on.
+
+23
+00:02:40,756 --> 00:02:48,776
+The option to "Show as pie chart" is also available and bins can be isolated and compared by selecting them from the bins area.
+
+24
+00:02:48,776 --> 00:03:01,105
+From the Variable drop-down, DV is selected. Now the chart illustrates how the bins are distributed across the categories of DV. Changing the chart to a pie chart illustrates things more clearly.
+
+25
+00:03:01,105 --> 00:03:07,323
+As can be seen there is little difference across the DV categories in terms of the bin distributions.
+
+26
+00:03:07,323 --> 00:03:13,096
+The new variable is given the name: value_ bins,  and num_ products_ SUM selected.
+
+27
+00:03:13,096 --> 00:03:22,265
+The new variable to create is named to loyalty_bins and the Binning type selected is Equal Height, and the previous settings are retained and 2 bins are created.
+
+28
+00:03:22,265 --> 00:03:29,318
+The binning code for the transformations applied is available from the Binning Code tab in either SAS or SQL format.
+
+29
+00:03:29,318 --> 00:03:36,136
+The keyboard shortcut CTRL+S is used to apply binning settings and the asterisk disappears to reflect this.
+
+30
+00:03:36,136 --> 00:03:44,599
+Returning to the Workflow and opening the created dataset with the Data Profiler, the variables loyalty_bins and value_bins have been added.
+
+31
+00:03:44,599 --> 00:03:53,690
+Viewing the bins for each variable using charts, it can be seen that two bins are evident for each with an approximately equal number of observations in each bin.
+
+32
+00:03:53,690 --> 00:03:59,254
+Viewing the data, it can be seen that the bins have cutpoints that are not very appealing.
+
+33
+00:03:59,254 --> 00:04:11,244
+To address this, the binning code can be copied and used in a SAS Code block and applied to the data directly. This way the bin labels can be changed to something more readily identifiable.
+
+34
+00:04:11,244 --> 00:04:23,757
+The binning code is copied by selecting and using the keyboard shortcut CTRL+C. A SAS code block is selected and dragged onto the canvas and the dataset prior to the binning block is attached.
+
+35
+00:04:23,757 --> 00:04:34,493
+Double clicking opens the SAS Code block. First an output data set is needed, and this is added by clicking the "Add a new output dataset button" In the Outputs area.
+
+36
+00:04:34,493 --> 00:04:47,058
+The binning code copied previously is pasted using CTRL+V. Now, the bin labels can be easily changed . Here they are updated to low and high for each variable.
+
+37
+00:04:47,058 --> 00:04:58,761
+The code must be wrapped in a DATA STEP. This requires the use of the command "DATA".   This creates a dataset and this is dragged into the code and a semi-colon added.
+
+38
+00:04:58,761 --> 00:05:04,638
+Next, the data to process must be specified, this is done using "a SET statement."
+
+39
+00:05:04,638 --> 00:05:10,620
+The input dataset is dragged into the code and the code line is completed with a semi-colon.
+
+40
+00:05:10,620 --> 00:05:16,602
+Finally, a RUN Statement is required and this is added at the very end with a semi-colon.
+
+41
+00:05:16,602 --> 00:05:19,580
+Now the bin lables are changed.
+
+42
+00:05:19,580 --> 00:05:24,778
+Using CTRL+S applies the binning and the output dataset is created.
+
+43
+00:05:24,778 --> 00:05:36,037
+Accessing the new dataset via the Data Profiler and viewing charts for the created variables, shows labels have been applied and make the variable categories much easier to understand.
+
+44
+00:05:36,037 --> 00:05:43,299
+The binning can also be applied to other data by generating a binning model - this is accessed by right clicking the binning block.
+
+45
+00:05:43,299 --> 00:05:48,288
+Clicking the option configure outputs opens the binning block outputs dialog.
+
+46
+00:05:48,288 --> 00:05:55,524
+By default, a new dataset is generated, but this can be suppressed by moving it to the Unselected Output list.
+
+47
+00:05:55,524 --> 00:06:03,648
+Moving the binning model from the Unselected Output list to the Selected Output list and clicking OK, generates the binning model block.
+
+48
+00:06:03,648 --> 00:06:12,869
+The block cannot be viewed but now the binning can be applied to any appropriate dataset by connecting both the binning model and the dataset to bin to a Score block.
+
+49
+00:06:12,869 --> 00:06:19,034
+To illustrate, the same dataset is connected and the output is automatically generated.
+
+50
+00:06:19,034 --> 00:06:23,815
+Viewing the data, it can be seen that the new variables have been added.
+

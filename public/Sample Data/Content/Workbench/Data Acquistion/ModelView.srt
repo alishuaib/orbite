@@ -1,0 +1,108 @@
+1
+00:00:00,000 --> 00:00:08,463
+Lets begin with the demonstration. This demonstration starts from the Workbench Workflow perspective with a clean slate.
+
+2
+00:00:08,463 --> 00:00:31,869
+A project folder is added by right-clicking the Project Explorer view, selecting New and then Project. From here, General is expanded and Project selected. Clicking Next provides the option to specify the project name, here, “First_Project”. The project default location is accepted, which is the Workspace root directory but can be changed if desired.
+
+3
+00:00:31,869 --> 00:00:39,627
+Once complete, clicking Finish creates the project and the project folder is visible and appears in the Project Explorer view.
+
+4
+00:00:39,627 --> 00:00:45,661
+A Workflow is added to the project by right-clicking the project folder and selecting New > Workflow.
+
+5
+00:00:45,661 --> 00:00:54,883
+Here the name “First_Workflow” is assigned and clicking Finish adds the new Workflow to the project folder and this is automatically opened in the Workflow perspective.
+
+6
+00:00:54,883 --> 00:01:08,571
+The file used here is a .csv file called “Model_View” and can be found in the data folder. This can be located using the File Explorer view. Double-clicking opens the file in Microsoft Excel.
+
+7
+00:01:08,571 --> 00:01:17,531
+As can be seen there is an id variable, some demographics and financial details as well as a variable called DV with two values: 0 and 1.
+
+8
+00:01:17,531 --> 00:01:31,454
+This file can be imported to the Workflow using a number of methods. The first is by using an appropriate block from the import group. As this is a .csv file, the Text File Import block is used.
+
+9
+00:01:31,454 --> 00:01:40,388
+The block can be dragged from the group, or by double-clicking the Workflow canvas with the left mouse button.  all blocks can be accessed.
+
+10
+00:01:40,388 --> 00:01:53,658
+A quick method, given this is a known file type, is to drag the file directly from the File Explorer onto the Workflow canvas. Hovering over the block indicator shows that additional configuration is required.
+
+11
+00:01:53,658 --> 00:01:57,968
+Double-clicking the block opens its configuration dialog.
+
+12
+00:01:57,968 --> 00:02:12,649
+The configuration dialog opens on the File page and as can be seen No preview has been generated. It can be seen from the File page that the file particulars are set correctly, and other pages also list the dataset variables and properties.
+
+13
+00:02:12,649 --> 00:02:25,083
+Clicking Apply it can be seen that the block indicator status is now grey, meaning the block is configured correctly, but the block execution status is red and hovering displays the message: Execution failed with errors.
+
+14
+00:02:25,083 --> 00:02:36,525
+The message does not provide any insight in terms of why there is an error so further investigation is necessary. Right-clicking the block and selecting Open Log provides more detail.
+
+15
+00:02:36,525 --> 00:02:47,784
+From the log, its easy to see why the block is not executing, the file is being used by another process. This is due to the file being currently open in Microsoft Excel.
+
+16
+00:02:47,784 --> 00:03:02,935
+The file is closed and the block right-clicked. From here Run To Block is selected and now the block execution status has changed to green, meaning the data has been imported successfully. At this point the file is renamed to “Model_View”.
+
+17
+00:03:02,935 --> 00:03:12,652
+The dataset can be opened by either double-clicking the dataset or by right-clicking and selecting Open or Open With and choosing either Data Profiler or Dataset File Viewer.
+
+18
+00:03:12,652 --> 00:03:19,941
+Choosing Open, or Open With > Dataset file Viewer or simply double-clicking the dataset opens the Dataset File Viewer.
+
+19
+00:03:19,941 --> 00:03:36,920
+This is a spreadsheet style display with variables in columns, and observations in rows. Right-clicking provides access to sort, copy, search, and export options. Note that sort options are only available when a variable header is selected and right-clicked.
+
+20
+00:03:36,920 --> 00:03:46,246
+Properties provides access to variable and dataset information. The Columns page lists all dataset variables and their properties.
+
+21
+00:03:46,246 --> 00:03:50,164
+Other pages provide additional dataset details.
+
+22
+00:03:50,164 --> 00:04:06,203
+Each variable can be filtered by accessing the filtering icon and selecting an option, the filter applied is displayed as a label below the variable name, and multiple filters can be applied. Here a filter is applied to the variable age: Age greater than 78.
+
+23
+00:04:06,203 --> 00:04:13,204
+As can be seen, only three observations meet the filter criteria of being greater than or equal to 78.
+
+24
+00:04:13,204 --> 00:04:30,262
+The dataset can be exported by right-clicking and selecting Export. Three options are available: Delimited, Fixed width and Excel. Note that selecting either Delimited or Fixed width provide a preview of the data and this includes the filter applied previously.
+
+25
+00:04:30,262 --> 00:04:43,245
+Here Excel is chosen and clicking Next provides options to specify the export location. Additional options to open the file once the export is complete and overwrite an existing file are also present.
+
+26
+00:04:43,245 --> 00:04:55,209
+The option, "open when complete" is selected and clicking Next reveals the SAS language code for the export. Clicking Finish runs the export and opens the file in Microsoft Excel.
+
+27
+00:04:55,209 --> 00:04:59,389
+Note that the filter applied previously has still applies
+

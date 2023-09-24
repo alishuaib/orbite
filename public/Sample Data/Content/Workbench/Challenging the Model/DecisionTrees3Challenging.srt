@@ -1,0 +1,132 @@
+1
+00:00:00,000 --> 00:00:12,512
+This demonstration uses a decision tree model developed in a previous lesson. The model contains five variables capital_gain, relationship, education, education_num and occupation.
+
+2
+00:00:12,512 --> 00:00:22,125
+This is the current champion model. Two additional models will be developed to compete with this model, a logistic regression and a decision forest.
+
+3
+00:00:22,125 --> 00:00:30,563
+Logistic regression will be used to assess all variables and a stepwise method will be used to select and include only significant predictors.
+
+4
+00:00:30,563 --> 00:00:39,784
+Variables identified here will be used to model the same dependent variable using a decision forest and all models will be assessed using the Analyse Models block.
+
+5
+00:00:39,784 --> 00:00:44,695
+Viewing the data prior to proceeding shows that there are 13 variables.
+
+6
+00:00:44,695 --> 00:00:52,453
+The variable DV will be used as the dependent variable and a selection of remaining variables used as independent variables.
+
+7
+00:00:52,453 --> 00:00:59,088
+As capital_gain has a high proportion of missing values it will not be included as a possible predictor.
+
+8
+00:00:59,088 --> 00:01:09,459
+Another variable that will not be included are ID. education_num and education record education, as education_num is a numeric continuous variable, it is preferred.
+
+9
+00:01:09,459 --> 00:01:16,486
+The variables relationship and marital_status record similar characteristics and here relationship will be used.
+
+10
+00:01:16,486 --> 00:01:24,792
+To begin, a logistic regression block is dragged from the Model Training group to the Workflow canvas and the development partition connected.
+
+11
+00:01:24,792 --> 00:01:36,077
+The block has three pages, Variable selection, Model Selection and Properties. The Variable Selection page allows selection of the dependent and independent variables.
+
+12
+00:01:36,077 --> 00:01:42,216
+From the dependent variable dropdown DV is chosen and bad selected from the event dropdown.
+
+13
+00:01:42,216 --> 00:01:50,523
+All variables are moved into the selected effect variables area and capital_gain, education, ID and marital_status are removed.
+
+14
+00:01:50,523 --> 00:02:04,185
+Note that some variables have been correctly identified as class variables, however education_num has also been selected as a class variable, as it contains integer values, deselecting ensures it will be used as a continuous predictor.
+
+15
+00:02:04,185 --> 00:02:16,593
+There is interest in only including significant predictors in the model. An option to ensure all variables are assessed and only significant predictors retained is available from the model selection page.
+
+16
+00:02:16,593 --> 00:02:23,881
+The method drop down provides five options, the option none, will build a model with all independent variables supplied.
+
+17
+00:02:23,881 --> 00:02:34,669
+The other four methods include and retain variables only if they meet specific significance thresholds, these are available and can be modified once an appropriate method has been selected.
+
+18
+00:02:34,669 --> 00:02:40,965
+The option selected here is Stepwise, this allows only significant predictors into the model.
+
+19
+00:02:40,965 --> 00:02:48,775
+Once a new variable is added to the model, variables already present are re-assessed to ensure their continued significance.
+
+20
+00:02:48,775 --> 00:03:01,027
+Clicking OK runs the model and once complete double-click the resulting Logistic Regression Model block. The output is presented across two tabs: Logistic Regression Results and Scoring Code.
+
+21
+00:03:01,027 --> 00:03:18,790
+The logistic regression results provide six expandable sections including Model Information, Model Fit Statistics, Testing Global Null Hypothesis: BETA = 0, Analysis of Maximum Likelihood Estimates, Odds Ratio Estimates and Association of Predicted Probabilities and Observed Responses.
+
+22
+00:03:18,790 --> 00:03:31,041
+A discussion of the specifics of these areas is not warranted here, however from either the Analysis of Maximum Likelihood Estimates or the Odds Ratio Estimates tables, the variables included in the model are visible.
+
+23
+00:03:31,041 --> 00:03:40,210
+Eight variables were included: capital_loss, workclass, occupation, education_num, sex, relationship, age and hours_per_week.
+
+24
+00:03:40,210 --> 00:03:54,525
+These variables are all significant predictors in the model and will be used when developing a decision forest. The next step is to score the development and testing partitions, here score blocks are added, connections made and data scored.
+
+25
+00:03:54,525 --> 00:04:07,978
+Prior to connecting to the Analyse Models block, the scored datasets are renamed to lr_dev and lr_test respectively so that they can be easily identified. The partitions scored with the decision tree are also renamed appropriately.
+
+26
+00:04:07,978 --> 00:04:22,685
+Once complete, the scored partitions are connected to the Analyse models block and configured. Here the same True class, Truth category and corresponding Predicted probability variable for both partitions are selected and OK clicked.
+
+27
+00:04:22,685 --> 00:04:30,966
+Opening the Model Analysis Report, it can be seen there are lines for both the decision tree and logistic regression applied to both partitions.
+
+28
+00:04:30,966 --> 00:04:42,329
+From the Summary its clear to see that the logistic regression is outperforming the decision tree. This is not surprising given that more variables were used to build the logistic regression model.
+
+29
+00:04:42,329 --> 00:04:57,637
+Notice that the curves are smooth for the logistic regression model in comparison to the decision tree, this is because an equation is used to generate scores for each observation based on the independent variable characteristics as opposed to grouping observations and assigning them the same score.
+
+30
+00:04:57,637 --> 00:05:05,500
+From the graphs the logistic regression is outperforming the decision tree. This is reflected in the statistics.
+
+31
+00:05:05,500 --> 00:05:16,340
+Focusing on the development partition. The accuracy is slightly higher for the decision tree but the target category is not predicted as well as the logistic regression.
+
+32
+00:05:16,340 --> 00:05:29,558
+Also, the logistic regression gives a better average predictive accuracy as relayed by the F1 statistic. Other values such as the C-Statistic and K-S Test value also favour the logistic regression.
+
+33
+00:05:29,558 --> 00:05:37,735
+Both models perform consistently across partitions but at this point the logistic regression with eight variables would be the model of choice.
+

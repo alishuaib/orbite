@@ -1,0 +1,186 @@
+Chapter 8: Decision Tree Models in Knowledge Studio
+
+The Decision Tree Node, found under the Model palette, allows you to develop a predictive model by generating splits based on dataset features.
+
+Knowledge Studio allows you to both, interactively and automatically generate splits. We will be going over both methods in this demonstration.
+
+Let’s start by building a Decision Tree Model in Knowledge Studio.
+
+To begin, first create a new workflow.
+
+Next, link the partitioned Training and Validation datasets to our new workflow canvas.
+
+Now, drag the Decision Tree Node to the canvas.
+
+Connect the Training dataset to the decision tree node by dragging out an arrow
+
+Once the node is blue, double click to open the wizard.
+
+Here, set an appropriate name for this model
+
+Next, set the dependent variable to Response
+
+Confirm the correct dataset is connected and click next.
+
+On this second wizard page, we adjust the various Training Parameters.
+
+For Split Search method, we will choose the default Cluster option.
+
+For Measure select Entropy in this case. Note that Knowledge Studio provides a wide array of measures to choose from for different scenarios.
+
+Once done, click next.
+
+On the third wizard page, we can analyze the ranking and information for each variables predictive power and select which variables should be included in our model.
+
+Next, click Analyze to calculate the rank and associated information.
+
+For this demo we will keep the remaining variables and continue.
+
+On this page of the wizard, we can enable or disable automatically growing our tree and set parameters such as a Stopping Criteria.
+
+We will leave this disabled for now, but an example of auto-grow will be shown later in this demonstration.
+
+Next, let’s have a look at the Attribute Editor.
+
+Here we can modify various attributes for each variable in our dataset to help guide the algorithm in building a model.
+
+You will see this in all modelling techniques moving forward making it very useful to understand.
+
+Variable Name indicates the variable each row is associated with.
+
+“Include” allows us to select whether a variable should be included in the modeling algorithm.
+
+Role allows us to select between, Independent, Dependent variable and Weight. Weight is used to prioritize the importance of each record based on the variable's value.
+
+“Usage” tells the algorithm how each variable should be treated based on its data type characteristics. For example, ordered variable types should be set to ordinal.
+
+P-Value is used to adjust the number of branches a variable produces. Lower P-value will produce less branches compared to a higher setting.
+
+“Default number of Bins” adjusts the initial number of bins created for unique values in each variable.
+
+Interval type lets us select between Static and Dynamic bin options for continuous variables. Static bins remain unchanged throughout the tree, while Dynamic bins are recalculated each time the variable is used, resulting in a more comprehensive tree. Generally, Dynamic bins are recommended.
+
+“Break Apart” is used to improve computational speed when variables with numerous categories are used. To prioritize computational speed select “No”, but note that doing so lowers accuracy.
+
+“Missing Values” lets us choose between use, ignore, and float. Float is used to group records with missing values to nearest similar category.
+
+Ordered Display allows display adjustments for ordinal type variables. Selecting range will display values as 1 to 4 for example, while selecting all will display values as 1, 2, 3, 4 instead.
+
+The “Max Branches column” lets us adjust the maximum number of branches. Zero indicates no restrictions while any other number will add a limit.
+
+Open Left and Right is used to indicate if a continuous variable extends to negative and positive infinity accordingly.
+
+Cardinality displays the number of unique values for each variable.
+
+Format String is used to adjust the display precision and indicate if a variable should be presented as currency or percentage when necessary.
+
+After confirming the changes click “Ok” to confirm.
+
+Now click “run” to build the model.
+
+Once the node status turns green, double click to open the decision tree.
+
+To start interactively investigating the decision tree, right click on the root node and select Find Split.
+
+Find split picks the most predictive independent variable and will create new nodes on the decision tree.
+
+To see the next predictive variable, right click and select “next split”.
+
+Similarly, to go back to the previous variable, right click and select “previous split”.
+
+Let’s split the husband/wife grouping using “find split”.
+
+Since there’s a lot of variables, edit the split to group some of these together, reducing the tree complexity.
+
+Right click on the parent and select “edit split”.
+
+Select the variables to group together.
+
+Once we’re satisfied with the groups, click “Ok” to confirm.
+
+Next, split the unmarried group using “find split”.
+
+If we’d like to force a split using a certain variable, you can right click on the parent and select “force split”.
+
+Let’s select capital loss and edit the ranges in this case.
+
+Click Ok to generate the split.
+
+Next, let’s split the Other Relative category with find split.
+
+In the case you would like to completely ignore a variable throughout your decision tree, Right click on the parent node and select Ignore Variable.
+
+If we want to remove a set of child nodes, right click on the parent and select Erase child nodes.
+
+We can also copy and paste splits from one node to another by right clicking and first selecting copy splits.
+
+Then, right click on our target node and select paste splits.
+
+To tag a node of interest, right click and select Tag/Untag Node.
+
+Lastly to add comments, right click and select insert comment.
+
+We can also hide or show comments by right clicking and selecting show/hide comment.
+
+Lets save this tree model as an instance.
+
+Press Ctrl S or click Save.
+
+Next head back to the workflow canvas and right click the decision tree node.
+
+Select save model instance and give it an appropriate name.
+
+Click “OK” to save the instance.
+
+Now let’s create an automatically grown decision tree, using the same data node.
+
+Right click the root node and select auto grow decision tree.
+
+We can adjust the parameters as needed, for now let's use the default settings.
+
+Click Ok to generate the tree.
+
+Since this is a larger tree we can see the mini-map pop up in the bottom right-hand corner which can be used to pan the view.
+
+Similarly, we can use the Tree map tab to see a simplified view of the tree.
+
+If we split screen the Tree map view, we can use it to navigate.
+
+If we’re interested in seeing data available in a specific node we can select the node on our Tree then view the Node data tab.
+
+Click options and select the fields we are interested in seeing then confirm by clicking ok.
+
+If we go back to our Tree and select another node we can see different data is displayed.
+
+Next, we can use the Chart tab to create dynamic charts for any independent variable.
+
+In the options wizard, click next.
+
+Select age from the variable dropdown and click finish.
+
+If we split the display with our Tree, we see that selecting another node automatically updates the chart.
+
+Similarly, we can create more charts by clicking Add.
+
+If we’re interested in saving a chart, right click and select Save Chart.
+
+Profile chart is also a way to visualize our decision tree based on the number of records in each node.
+
+We can change the charted value to yes or no.
+
+Thicker segments indicate larger groups of records and you may be interested in splitting them further.
+
+First, let’s split the display between the profile chart and tree.
+
+Next, right click on the segment and select “find split.”
+
+As we can see, it has split into smaller segments.
+
+Heading back to the tree we can also see new splits have been added.
+
+Parameters and attributes provides a report of all the settings we established earlier on when generating the model.
+
+Saved charts are found under the saved charts tab to easily review later.
+
+Let’s save this model instance so we can compare our two models in a later module.
+

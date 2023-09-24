@@ -1,0 +1,208 @@
+1
+00:00:00,000 --> 00:00:01,959
+Weight of Evidence
+
+2
+00:00:01,959 --> 00:00:07,549
+In this demonstration we will be going over the Weight of Evidence node in Knowledge Studio.
+
+3
+00:00:07,549 --> 00:00:18,520
+Weight of Evidence is used to apply variable transformations by assigning a single number for each category or bin within each dataset field based on predictive power.
+
+4
+00:00:18,520 --> 00:00:21,759
+To begin first create a new workflow.
+
+5
+00:00:21,759 --> 00:00:24,267
+Link the Census dataset.
+
+6
+00:00:24,267 --> 00:00:28,473
+Drag the Weight of Evidence node to the workflow canvas.
+
+7
+00:00:28,473 --> 00:00:31,033
+Connect the Census dataset.
+
+8
+00:00:31,033 --> 00:00:39,288
+Note that Weight of Evidence transformations are usually applied to only the Training dataset instead of both training and validation.
+
+9
+00:00:39,288 --> 00:00:42,109
+Double click to open the wizard.
+
+10
+00:00:42,109 --> 00:00:44,434
+Set an appropriate name.
+
+11
+00:00:44,434 --> 00:00:49,763
+Set the dependent variable to Response and target category to Yes.
+
+12
+00:00:49,763 --> 00:00:53,629
+Select all fields except for Customer ID .
+
+13
+00:00:53,629 --> 00:00:58,932
+For more advanced options, the attribute editor is also available.
+
+14
+00:00:58,932 --> 00:01:00,812
+Click next.
+
+15
+00:01:00,812 --> 00:01:07,500
+On this page you can modify optional optimization options used to generate decision trees .
+
+16
+00:01:07,500 --> 00:01:13,430
+Tree Color tab allows you to customize the colors used to represent predictive values.
+
+17
+00:01:13,430 --> 00:01:19,882
+Tree Configuration tab allows adjustments to the orientation and layout of the tree.
+
+18
+00:01:19,882 --> 00:01:24,688
+Tree node tab is used to select information shown for each node.
+
+19
+00:01:24,688 --> 00:01:28,398
+Tree growth lets you set stopping criteria.
+
+20
+00:01:28,398 --> 00:01:33,387
+Split measure is used to set measure parameters used to build the tree.
+
+21
+00:01:33,387 --> 00:01:37,958
+Tree training can be used to change the split search and measure.
+
+22
+00:01:37,958 --> 00:01:47,624
+By default, Knowledge Studio uses optimal binning algorithms to bin numeric variables making it safe to continue without any changes.
+
+23
+00:01:47,624 --> 00:01:49,505
+Click next.
+
+24
+00:01:49,505 --> 00:01:55,173
+Now we can edit the bins manually and apply additional optimization options.
+
+25
+00:01:55,173 --> 00:02:01,103
+In the top left, various buttons are available to navigate and edit splits.
+
+26
+00:02:01,103 --> 00:02:12,074
+The decision tree view shows splits alongside weight of evidence values. By default these bins are generated through optimal binning algorithms mentioned earlier.
+
+27
+00:02:12,074 --> 00:02:19,598
+Similarly, below this we have a histogram representation for each split showing the size of each bin.
+
+28
+00:02:19,598 --> 00:02:28,035
+On the top right we have a line chart indicating percentage of Yes and No records along with weight of evidence values per bin.
+
+29
+00:02:28,035 --> 00:02:41,227
+Directly below this we can see a tabular representation of each bin and various calculated statistics. The 2nd table shows entropy and information values for this variable.
+
+30
+00:02:41,227 --> 00:02:50,135
+Lastly on the bottom right we have various options used to apply optimization techniques specifically to the current variable splits.
+
+31
+00:02:50,135 --> 00:02:59,147
+As we edit the bins, we want to keep an eye out on tree splits, line chart and changes in entropy and information value.
+
+32
+00:02:59,147 --> 00:03:04,293
+We can navigate between splits using Next and Previous split buttons.
+
+33
+00:03:04,293 --> 00:03:08,055
+To go to a specific split, click Go to Split.
+
+34
+00:03:08,055 --> 00:03:13,201
+By default, these splits are sorted from most to least information value.
+
+35
+00:03:13,201 --> 00:03:15,761
+Let’s go to the last split.
+
+36
+00:03:15,761 --> 00:03:28,509
+Since this variable is mainly for identification, we can use erase split to remove it. Generally, variables like this should be removed at the first page, alongside Customer ID.
+
+37
+00:03:28,509 --> 00:03:31,591
+Next go to capital gain split.
+
+38
+00:03:31,591 --> 00:03:38,461
+Under “Optimization” select Monotonic and set Enforce Equal size to 0.5
+
+39
+00:03:38,461 --> 00:03:40,290
+Click apply.
+
+40
+00:03:40,290 --> 00:03:44,182
+To remove an applied optimization click reset.
+
+41
+00:03:44,182 --> 00:03:50,399
+Additionally, you can apply optimization to all splits by clicking Optimize All.
+
+42
+00:03:50,399 --> 00:03:55,989
+Click Edit Split to open a range editor, allowing you to modify bins.
+
+43
+00:03:55,989 --> 00:04:01,449
+Lastly to reset all changes made to every split, click Reset Bins.
+
+44
+00:04:01,449 --> 00:04:04,975
+Once you’re happy with your bins click next.
+
+45
+00:04:04,975 --> 00:04:10,879
+This helper page lets you adjust the field name extension for transformed variables.
+
+46
+00:04:10,879 --> 00:04:14,980
+You can also choose to output a transformation report.
+
+47
+00:04:14,980 --> 00:04:16,861
+Click next.
+
+48
+00:04:16,861 --> 00:04:27,101
+Here you can review each Weight of Evidence variable along with your final Information Value. The expressions can be exported and used later when needed.
+
+49
+00:04:27,101 --> 00:04:30,993
+After reviewing click Run to generate an output.
+
+50
+00:04:30,993 --> 00:04:33,579
+Double click on the output
+
+51
+00:04:33,579 --> 00:04:37,811
+We can see the new variables added to our Census dataset.
+
+52
+00:04:37,811 --> 00:04:48,025
+Heading to data tab, we can also see that each variable’s values has been transformed to a Weight of Evidence value based on the splits we created earlier.
+

@@ -1,0 +1,102 @@
+Chapter 9: Model Evaluation and Validation.
+
+Using our models from our previous demonstration in Chapter 8, let’s look at how we can compare and evaluate two models in Knowledge Studio.
+
+First drag a model validation node found under the evaluate palette onto our workflow canvas.
+
+Next, connect our Interactive Model and Training dataset to the node.
+
+Once the node has turned blue, double click to open the wizard.
+
+First, set an appropriate name and click next.
+
+On this second page, you can adjust the fields to make sure they match in case the names are different between the model and dataset being used.
+
+Next, we are shown all the possible validation fields and given the options to adjust our cutoff values.
+
+Let’s change our cutoff values to 0.3 for yes and 0.7 for no then click Next.
+
+On this page, we can choose which fields to include in our output.
+
+In this case, we are only interested in the "Response" and "ID" fields so let’s select those two.
+
+After confirming everything is correct, click run to generate the output.
+
+Once the model validation node outputs the dataset you can double click to view the confusion matrix.
+
+You can see the accuracy for the "No" and "Yes" response here.
+
+Under the Statistics section we can find our total accuracy along with other calculated statistics.
+
+Let’s head back to the workflow canvas and look at our model performance.
+
+First drag the model analyzer node from the evaluate palette onto the canvas.
+
+Next connect our model validation output.
+
+Double click to open the wizard.
+
+Make sure the dependent variable is correct.
+
+Let’s change our predicted value and probability score to Yes.
+
+Give an appropriate name and click run.
+
+Once the status turns green, double click to open the analyzer output.
+
+First take a look at the cumulative lift chart.
+
+This chart compares our model performance to random selection. If we look at the top 40% of our population, we can see that 82% of that population is in the yes category. If we had a "no" model, we would only have 40% by random selection.
+
+Next, let’s look at the Lift Chart. This is a scaled representation of our model’s performance. The straight line represents random selection, so by looking at this we can say that once we hit the top 40% of our population, we should stop using the model as the performance falls below the outcome of random selection.
+
+All the points used to plot these charts can be found under the Cumulative Lift report and Lift Report tabs.
+
+The K-S chart displays a curve showing the cumulative distribution of the dependent variable categories. Hovering over the dotted line, we can tell that at 40% we maximize the separation between No and Yes responses.
+
+The ROC chart compares the True Positive and False Positive rates. At the bottom next to the legend, we can see the AUC and Genie index. The chart is used to interpret how much the False Positive rate needs to be accounted for at a given True Positive rate.
+
+For example, at 80% True Positive rate we would have to account for 25% False Positive rate.
+
+The next tab is a goodness of fit test which uses a variation of chi square test. It’s a test statistic based on the difference between observed and expected frequency of a chi square distribution.
+
+Let’s head back to our workflow canvas and connect our validation dataset as well.
+
+First drag a new model validation node to the canvas.
+
+Next, connect our Interactive Model and Validation dataset.
+
+Let’s go through the wizard and adjust the settings to match our previous model validation node.
+
+Once we have the output, connect it to our model analyzer node.
+
+Double click to open the wizard.
+
+Let’s look at the second tab and change the predicted value and probability score.
+
+Give an appropriate name and click run.
+
+Now double click the analyzer to compare the performance.
+
+As we can see there are no huge gaps (or disparities) between the two lines. Seeing huge gaps generally means the model cannot be used with different datasets.
+
+Let’s head back to the workflow canvas and compare our two models now.
+
+First, add a new model validation node and connect it to the auto grow model alongside the validation dataset.
+
+Open the wizard and set the settings the same to those as previously used.
+
+Next, add a new model analyzer node and connect both validation outputs.
+
+Double click to open the wizard.
+
+Let’s change the predicted value and probability score to Yes for both tabs and give them an appropriate name.
+
+After confirming everything is correct, click run.
+
+Once the status turns green double click to open the report.
+
+Now we can see how both of our models compared with each other. As we can see, our auto grown tree is performing better than our interactive model.
+
+With this we can compare different model performances to identify the best model for our use case.
+

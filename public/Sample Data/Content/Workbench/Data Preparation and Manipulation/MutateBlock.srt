@@ -1,0 +1,76 @@
+1
+00:00:00,000 --> 00:00:06,504
+The Mutate block can be used to apply the language of SAS or SQL statements to generate new variables.
+
+2
+00:00:06,504 --> 00:00:17,240
+The Mutate block is dragged onto the canvas. The dataset created previously is connected, and now the Mutate block configuration dialog can be accessed.
+
+3
+00:00:17,240 --> 00:00:24,424
+Here, we wish to create a new variable using those created earlier to distinguish valuable and loyal customers.
+
+4
+00:00:24,424 --> 00:00:33,985
+A new variable can be added by clicking the "Add new variable" icon. Once added, we can change the variable name to value_ loyalty.
+
+5
+00:00:33,985 --> 00:00:41,534
+Options to define the variable are available from the Configure Variable dialog, which is accessed by clicking the gear icons.
+
+6
+00:00:41,534 --> 00:00:49,449
+Three pages are available. The first, Variable, enables the properties of the variable to be specified.
+
+7
+00:00:49,449 --> 00:00:56,241
+As the variable being created here will contain character values, the Type Character is appropriately set.
+
+8
+00:00:56,241 --> 00:01:03,242
+Other options such as label, length, format and informat can be set but if not, defaults are applied.
+
+9
+00:01:03,242 --> 00:01:16,512
+The Grouping Variable Selection page, allows selection of one or more grouping variables. The Output page provides options to determine how to output results, including the option: "Do not output this variable."
+
+10
+00:01:16,512 --> 00:01:32,133
+An expression can be applied in the Expression area. A list of dataset variables and functions, including help features, are available to assist with building expressions. These can be clicked to automatically add them to an expression.
+
+11
+00:01:32,133 --> 00:01:41,537
+Here, case statements are used to assign a value of gold, silver, bronze, or standard, based on the values of the variable’s loyalty_bins and value_bins.
+
+12
+00:01:41,537 --> 00:01:48,877
+The preview provides insight to the results but also whether the expression has been specified correctly and here, it is.
+
+13
+00:01:48,877 --> 00:01:53,788
+CTRL+S applies the expression and a new dataset is output.
+
+14
+00:01:53,788 --> 00:02:03,610
+Viewing results with the Data Profiler, it can be seen that the variable has been added. From "Univariate Charts", the distribution can be viewed.
+
+15
+00:02:03,610 --> 00:02:21,034
+The resulting Workflow can be augmented with additional detail. For example, if there is interest in adding transactional information for March, simply add the March dataset to the Workflow, connect to the merge node and the Workflow automatically updates and includes the new data in processing.
+
+16
+00:02:21,034 --> 00:02:28,662
+Notice the resulting File now has 355 observations, whereas previously there were 239.
+
+17
+00:02:28,662 --> 00:02:37,360
+Bear in mind that the new data should correspond in format and nature to that used to build the processing chain initially to ensure the Workflow runs error free.
+
+18
+00:02:37,360 --> 00:02:52,694
+The SAS language code for the entire Workflow can be generated and exported to a SAS language program via canvas right-click. The code can be copied and used directly in the SAS Language or Workflow perspectives; or exported and accessed as necessary.
+
+19
+00:02:52,694 --> 00:03:02,804
+Here the code is output to the Project folder as data_prep. sas, refreshing the project shows the file and it can be accessed by double-clicking.
+

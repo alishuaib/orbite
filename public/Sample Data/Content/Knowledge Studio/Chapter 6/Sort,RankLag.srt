@@ -1,0 +1,108 @@
+1
+00:00:00,000 --> 00:00:06,112
+In this demonstration, we will illustrate the “Sort Rank Lag” node in Knowledge Studio.
+
+2
+00:00:06,112 --> 00:00:11,833
+This node is used to sort data, create ranking fields and lagged variables.
+
+3
+00:00:11,833 --> 00:00:17,319
+Drag the “Sort Rank Lag” node onto the canvas from the manipulate palette.
+
+4
+00:00:17,319 --> 00:00:19,879
+Connect the census dataset.
+
+5
+00:00:19,879 --> 00:00:22,674
+Double click to open the node.
+
+6
+00:00:22,674 --> 00:00:24,999
+Set an appropriate name.
+
+7
+00:00:24,999 --> 00:00:26,879
+Click next.
+
+8
+00:00:26,879 --> 00:00:33,697
+On this page we can select variables to use in sorting and additionally adjust the sorting order.
+
+9
+00:00:33,697 --> 00:00:38,112
+Select the Age variable and the Hours per week variable.
+
+10
+00:00:38,112 --> 00:00:41,665
+Set the sorting order to Descending for Age.
+
+11
+00:00:41,665 --> 00:00:43,546
+Click next.
+
+12
+00:00:43,546 --> 00:00:48,326
+This page allows us to select a sorting variable to be used to group.
+
+13
+00:00:48,326 --> 00:00:53,968
+Optionally we can create a ranking field by selecting “Create Ranking Field”
+
+14
+00:00:53,968 --> 00:00:59,820
+This gives us the option to name the field and adjust its creation by group or not.
+
+15
+00:00:59,820 --> 00:01:04,261
+Select age, and create a new ranking field by group.
+
+16
+00:01:04,261 --> 00:01:06,141
+Click next.
+
+17
+00:01:06,141 --> 00:01:14,866
+Now we can use any variables left unused in grouping to optionally create lagged variables which are used with timeseries data.
+
+18
+00:01:14,866 --> 00:01:19,751
+Select a variable from the list, then specify a lag value.
+
+19
+00:01:19,751 --> 00:01:23,408
+Additionally, you can handle missing values.
+
+20
+00:01:23,408 --> 00:01:28,737
+We will not set a lagged variable since our dataset is not a timeseries.
+
+21
+00:01:28,737 --> 00:01:30,618
+Click next.
+
+22
+00:01:30,618 --> 00:01:36,548
+Lastly, we can select which variables to include in our output dataset.
+
+23
+00:01:36,548 --> 00:01:40,545
+After confirming everything is correct, click run.
+
+24
+00:01:40,545 --> 00:01:43,653
+Double click to open the dataset.
+
+25
+00:01:43,653 --> 00:01:47,336
+View the data tab with all fields selected.
+
+26
+00:01:47,336 --> 00:01:55,069
+We can see that the dataset is now sorted based on Age and Hours per week and we have a new field called “Age Rank”.
+
+27
+00:01:55,069 --> 00:02:03,376
+The ranking is done by each age group with lowest rank given to least hours per week and highest rank given to most hours per week.
+

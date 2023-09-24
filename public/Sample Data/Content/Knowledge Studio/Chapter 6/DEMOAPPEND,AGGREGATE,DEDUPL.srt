@@ -1,0 +1,268 @@
+1
+00:00:00,000 --> 00:00:01,593
+APPEND
+
+2
+00:00:01,593 --> 00:00:06,321
+In this demonstration we will illustrate how to append datasets.
+
+3
+00:00:06,321 --> 00:00:09,404
+To begin, create a new Workflow.
+
+4
+00:00:09,404 --> 00:00:17,214
+First, let’s import 3 datasets. Drag 3 "file import" nodes onto the canvas.
+
+5
+00:00:17,214 --> 00:00:23,118
+Double click the first node and import the Text dataset file “Week 25”
+
+6
+00:00:23,118 --> 00:00:28,917
+For the second node, import an Excel dataset using file “Week 24”
+
+7
+00:00:28,917 --> 00:00:34,377
+Lastly, import another Text dataset file “Base Demographics”
+
+8
+00:00:34,377 --> 00:00:39,131
+Let’s take a look at the dataset to understand the data and fields.
+
+9
+00:00:39,131 --> 00:00:51,591
+As we can see, Week 25 and 24 are transactional data with 3 columns. While the columns provide the same information the field names are different in each dataset.
+
+10
+00:00:51,591 --> 00:00:57,103
+Base Demographics shares demographic details for each customer ID.
+
+11
+00:00:57,103 --> 00:01:03,190
+Let’s append datasets Week 24 and Week 25 into a single dataset.
+
+12
+00:01:03,190 --> 00:01:08,101
+Drag an Append node from the Manipulate palette onto the canvas.
+
+13
+00:01:08,101 --> 00:01:11,052
+Connect both imported datasets.
+
+14
+00:01:11,052 --> 00:01:13,874
+Double click to open the wizard.
+
+15
+00:01:13,874 --> 00:01:17,583
+Set an appropriate name for the appended dataset.
+
+16
+00:01:17,583 --> 00:01:19,464
+Click next.
+
+17
+00:01:19,464 --> 00:01:26,595
+On this page, select which fields from our second dataset need to be made to match with the first dataset.
+
+18
+00:01:26,595 --> 00:01:33,126
+Let’s go ahead and match “Number of Sales” with “Number of Products,” and “Price” with “Cost”.
+
+19
+00:01:33,126 --> 00:01:35,007
+Click next.
+
+20
+00:01:35,007 --> 00:01:42,425
+Here, we can click Refresh to see a sample preview of both datasets.
+
+21
+00:01:42,425 --> 00:01:49,400
+Click Next. Now, we can select fields to include in the output dataset, let’s keep all 3 of them.
+
+22
+00:01:49,400 --> 00:01:52,430
+Click run to generate the output.
+
+23
+00:01:52,430 --> 00:02:00,450
+Double clicking on the output dataset, we can see the record count for both datasets used and the new appended record count.
+
+24
+00:02:00,450 --> 00:02:02,122
+AGGREGATE
+
+25
+00:02:02,122 --> 00:02:10,481
+In this demonstration we will illustrate how to aggregate datasets. We will continue from the append demonstration.
+
+26
+00:02:10,481 --> 00:02:19,023
+We will aggregate the dataset so we have 1 row per customer ID instead of multiple rows from the created appended dataset.
+
+27
+00:02:19,023 --> 00:02:22,654
+Drag an Aggregate node onto the canvas.
+
+28
+00:02:22,654 --> 00:02:25,632
+Connect the Append output dataset.
+
+29
+00:02:25,632 --> 00:02:28,453
+Double click to open the wizard.
+
+30
+00:02:28,453 --> 00:02:34,487
+First, let’s select the field we want to group by, in this case customer ID.
+
+31
+00:02:34,487 --> 00:02:36,368
+Click Next.
+
+32
+00:02:36,368 --> 00:02:43,996
+Here, we can create aggregation fields with various functions to summarize the data for each group.
+
+33
+00:02:43,996 --> 00:02:49,038
+First, name the new aggregate output dataset that will be created.
+
+34
+00:02:49,038 --> 00:02:52,120
+Let’s add 3 aggregation fields.
+
+35
+00:02:52,120 --> 00:02:56,352
+Select Number of Sales and set the function to Average.
+
+36
+00:02:56,352 --> 00:03:00,035
+Select Price and set the function to Average.
+
+37
+00:03:00,035 --> 00:03:04,319
+Select Price once more and set the function to Sum.
+
+38
+00:03:04,319 --> 00:03:07,793
+Adjust the resulting field names as needed.
+
+39
+00:03:07,793 --> 00:03:11,790
+After confirming everything is correct, click run.
+
+40
+00:03:11,790 --> 00:03:14,977
+Double click on the output dataset.
+
+41
+00:03:14,977 --> 00:03:22,579
+As we can see, the record count has dropped from 730 records to 554 records.
+
+42
+00:03:22,579 --> 00:03:32,244
+Click the data tab and select “all fields”.  We can see each ID is now associated with a single row alongside the fields we created.
+
+43
+00:03:32,244 --> 00:03:34,099
+DEDUPLICATE
+
+44
+00:03:34,099 --> 00:03:40,342
+In this demonstration we will illustrate how to deduplicate or get rid of duplicate values.
+
+45
+00:03:40,342 --> 00:03:47,526
+Let’s use the Base Demographics dataset, for this demonstration we will use our aggregate demo workflow.
+
+46
+00:03:47,526 --> 00:03:51,209
+First, we need to remove duplicate rows.
+
+47
+00:03:51,209 --> 00:03:55,049
+Drag a Deduplicate node onto the canvas.
+
+48
+00:03:55,049 --> 00:03:58,262
+Connect the Base Demographics dataset.
+
+49
+00:03:58,262 --> 00:04:01,083
+Double click to open the wizard.
+
+50
+00:04:01,083 --> 00:04:05,289
+Give the target dataset an appropriate name and click run.
+
+51
+00:04:05,289 --> 00:04:07,666
+Double click the output.
+
+52
+00:04:07,666 --> 00:04:15,268
+Here, we can see that 194 duplicate rows were removed alongside the number of rows left.
+
+53
+00:04:15,268 --> 00:04:23,026
+Lastly, we want to Join both, our transactional and demographic datasets into one complete dataset.
+
+54
+00:04:23,026 --> 00:04:26,396
+Drag a Join node onto the canvas.
+
+55
+00:04:26,396 --> 00:04:31,490
+Connect both output datasets from the Aggregate and Deduplicate nodes.
+
+56
+00:04:31,490 --> 00:04:34,311
+Double click to open the wizard.
+
+57
+00:04:34,311 --> 00:04:39,117
+Select the field to use to match records, in this case ID.
+
+58
+00:04:39,117 --> 00:04:40,998
+Click next.
+
+59
+00:04:40,998 --> 00:04:44,394
+Set an appropriate name for the new dataset.
+
+60
+00:04:44,394 --> 00:04:49,122
+We will keep the default join method to include matching records only.
+
+61
+00:04:49,122 --> 00:04:51,003
+Click next.
+
+62
+00:04:51,003 --> 00:04:56,306
+Select the fields to include from the first dataset and click next.
+
+63
+00:04:56,306 --> 00:05:01,609
+Select the fields to include from the second dataset and click next.
+
+64
+00:05:01,609 --> 00:05:05,135
+Review the selected fields and click run.
+
+65
+00:05:05,135 --> 00:05:08,322
+Double click on the output dataset.
+
+66
+00:05:08,322 --> 00:05:16,368
+We can see that all 554 records from our transactional dataset were found in the demographics dataset.
+
+67
+00:05:16,368 --> 00:05:25,249
+Viewing the data tab, we can also see that each customer ID is now associated with various demographic fields as well.
+

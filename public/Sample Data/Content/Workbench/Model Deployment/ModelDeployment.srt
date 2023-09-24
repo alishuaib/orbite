@@ -1,0 +1,148 @@
+1
+00:00:00,000 --> 00:00:10,501
+Deploying artifacts. Now that we've created these programs that are artifacts in Workbench. We are ready to upload them and deploy them to Hub.
+
+2
+00:00:10,501 --> 00:00:18,599
+This step is essential if you wish users to invoke programs within the Hub portal, run SAS language in pipelines or create schedules.
+
+3
+00:00:18,599 --> 00:00:23,666
+Let’s look at how you can deploy these artifacts that you've created within Workbench.
+
+4
+00:00:23,666 --> 00:00:39,209
+Artifacts are uploaded within the Deployment Services area on hub. The deployment services area is where you manage your artifacts. You can deploy, view finished jobs, create pipelines, scheduled jobs and create API endpoints.
+
+5
+00:00:39,209 --> 00:00:55,849
+A lot of functionality goes on in the deployment services, though once uploaded, you will have the ability to deploy. Deploying an artifact allows you to execute programs within the invocation hub portal area. We’ll be seeing how this is done in the demonstration.
+
+6
+00:00:55,849 --> 00:01:09,851
+You will also be specifying the input and output parameters for uploaded programs with a file. For this example, we have a program called Hello world along with two API’s, one for synchronous and another for asynchronous.
+
+7
+00:01:09,851 --> 00:01:22,808
+In the invocation area, This is where users run reports or programs for analysis or any other purpose. You have the option to get program results emailed to the user or notified by e-mail if a job fails.
+
+8
+00:01:22,808 --> 00:01:28,293
+This area can mainly be used as a testing ground before you use APIs as well.
+
+9
+00:01:28,293 --> 00:01:43,653
+There are two ways you can run an API, either synchronously or asynchronously. Synchronous jobs are APIs that are sent to the hub and back to the caller. This is usually done for someone wanting a quick response such as a single scorecard result.
+
+10
+00:01:43,653 --> 00:01:50,262
+If the user had input parameters for a scorecard, you would use a synchronous API to get a result back to them.
+
+11
+00:01:50,262 --> 00:02:03,872
+Asynchronous jobs are APIs that are sent to the hub. It's executed in the hub, but the job is stored within the hub. No result is sent back to the user aside from an ID associated with the stored job.
+
+12
+00:02:03,872 --> 00:02:14,948
+This is helpful for very large batch jobs that take a long time to run. If it takes two hours, you don't need to sit there for two hours waiting for this job to give you a result.
+
+13
+00:02:14,948 --> 00:02:25,554
+The results can be retrieved by an API whenever the job is completed. You can also have an API to tell you the status of that job by providing the ID as an input.
+
+14
+00:02:25,554 --> 00:02:32,946
+We can also go into the hub and use the asynchronous tab to view the jobs through a visual interface instead of using an API.
+
+15
+00:02:32,946 --> 00:02:46,478
+Similarly, you can view what job was run, what namespace it was running, who ran it, when it was executed, and all those details. You can also view the jobs and download it or download the results or the log.
+
+16
+00:02:46,478 --> 00:02:50,448
+Over here we have a completed artifact called Denmark.
+
+17
+00:02:50,448 --> 00:03:03,327
+Now our aim is to upload this to the hub and be able to execute API’s associated with it. If you’re already logged into Workbench, all you need to do is simply right click on the project and select upload to SLC.
+
+18
+00:03:03,327 --> 00:03:12,234
+We will be prompted to enter a repository to upload to, lets go ahead and create a new one on the hub. We’ll call it Denmark repo.
+
+19
+00:03:12,234 --> 00:03:26,262
+Coming back to workbench we can upload to the Denmark repo. We’ll keep the group name, this can be anything such as your project name, department, group name, etc. Then we specify a name and a version.
+
+20
+00:03:26,262 --> 00:03:47,134
+The version must be in this format, integer dot integer dot integer. This is our first upload so we’ll just use 1.0.0. Next specify what you want to include in the upload. In this case we want to include all programs in the upload. Select OK after confirming everything is correct.
+
+21
+00:03:47,134 --> 00:03:57,505
+We get a prompt stating we successfully uploaded artifact Denmark to version 1.0.0 to Hub. Click OK and our work for workbench is done.
+
+22
+00:03:57,505 --> 00:04:09,887
+Now moving to the deployment services area. Lets confirm if our artifact was uploaded correctly. Usually the artifact can be found at the top of the list as we can see here.
+
+23
+00:04:09,887 --> 00:04:30,811
+Lets go ahead and deploy this artifact. Select artifact, within this artifact we only have one execution profile available. Remember in order to run anything, you always have to specify execution profile. Lets select this execution profile, now its showing what repository the artifact was uploaded to.
+
+24
+00:04:30,811 --> 00:04:42,148
+Artifact name was called Denmark and the version I want to upload is 1.0.0 . The deployment path is something that needs to be unique as it serves as the API route.
+
+25
+00:04:42,148 --> 00:04:52,466
+If we type Denmark path, we would see Denmark path is populated within the UI with the API URL. Now we have an option to create an API endpoint.
+
+26
+00:04:52,466 --> 00:05:07,722
+This isn’t needed to if you're working within pipelines only but if you want API endpoint, you can select it and create categories. This is where you would specify Denmark category so every time you go into Workbench you can see your Denmark category populated.
+
+27
+00:05:07,722 --> 00:05:20,261
+By going into the directory and selecting Denmark category, we can filter to see all of our the programs we created earlier. Our first one returns a result with “hello everyone” which is synchronous API.
+
+28
+00:05:20,261 --> 00:05:31,650
+Copying the URL we can use this endpoint withing the browser as well. You will be asked to input credentials, once inputted you can see the result show up within the browser as intended.
+
+29
+00:05:31,650 --> 00:05:41,080
+The asynchronous API can be tested as well in the hub but requires setting a up the execution profile properly so the result can be displayed in the execution area.
+
+30
+00:05:41,080 --> 00:05:51,007
+We can also run these in the invocation area. If we head over to the home hub, then invocation area, and go into programs while selecting the filter.
+
+31
+00:05:51,007 --> 00:06:06,732
+We can select sc_param and then it provides a simple user interface to select input parameters required to invoke the program, selecting next we can also specify if we need to receive an e-mail for results or job fail. With that, the program ran with no issues.
+
+32
+00:06:06,732 --> 00:06:19,297
+We can run the other program as well, which uses a stream that requires a JSON file input. Selecting material input.json we can upload the file successfully and now we get to see two results.
+
+33
+00:06:19,297 --> 00:06:25,122
+The invocation area runs things asynchronously, which means the results are stored in the hub.
+
+34
+00:06:25,122 --> 00:06:34,709
+As mentioned previously this means there’s no reason to wait for large jobs to finish, closing the hub and coming back to it later will allow the job to still be executed.
+
+35
+00:06:34,709 --> 00:06:44,714
+After returning, we can head to the deployment services area, go into asynchronous jobs and then I can view jobs. Previously we ran the Param job.
+
+36
+00:06:44,714 --> 00:06:57,854
+Clicking on the drop down, we can see when it was dispatched, when it was downloaded and executed. We can also view the results and output log. The output can also be viewed and downloaded.
+
+37
+00:06:57,854 --> 00:07:04,045
+This is the basic overview of how you can upload and deploy programs with workbench and SLC hub
+

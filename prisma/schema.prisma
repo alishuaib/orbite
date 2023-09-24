@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url = env("DATABASE_URL_PROD")
+  relationMode = "prisma"
+}
+
+//Orbite authorization and management tables
+
+model Organization{
+  id Int @id @default(autoincrement())
+  name String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  icon String? @db.LongText
+
+  //Relations
+  users User[] @relation(name:"OrganizationUsers")
+  auth Auth? @relation(name:"OrganizationAuth")
+  config OrganizationConfig @relation(name:"OrganizationConfig",fields: [id], references: [id])
+  @@index([id])
+}
+
+model User{
+  id Int @id @default(autoincrement())
+
+  org Organization @relation(name:"OrganizationUsers",fields: [org_id], references: [id])
+  org_id Int @unique
+
+  name String
+  email String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  is_onboarded Boolean @default(false)
+
+  //Relations
+  config UserConfig @relation(name:"UserConfig",fields: [id], references: [id])
+  @@index([id])
+}
+
+enum platform {
+  moodle
+  totara
+  html
+}
+
+model Auth {
+  id Int @id @default(autoincrement())
+
+  org Organization @relation(name:"OrganizationAuth",fields: [org_id], references: [id])
+  org_id Int @unique
+
+  handle String @unique
+  platform platform? 
+  API_KEY String @unique
+  key_expiry String?
+
+  @@index([org_id])
+}
+
+model UserConfig{
+  id Int @id @default(autoincrement())
+  //TODO: Add user config fields as settings require
+
+  user User? @relation(name:"UserConfig")
+  @@index([id])
+}
+
+model OrganizationConfig{
+  id Int @id @default(autoincrement())
+  //TODO: Add organization wide config fields as settings require
+
+  user Organization? @relation(name:"OrganizationConfig")
+  @@index([id])
+}
+
+//Orbite user data tables
+
+model Course{
+  id Int @id @default(autoincrement())
+  user_id Int
+
+  title String
+  label String? //Shortname/label for course
+  summary String?
+  icon String? @db.LongText
+  visible Boolean @default(true)
+
+  url String? //URL to course homepage
+
+  //Sorting criteria's
+  namespace String?
+  category String? //Category of course
+  tags String? //List of Tags for course
+
+  version String //Version of course
+  meta Json? //Meta data for course
+
+  //Relations
+  sections Section[] @relation("CourseSections")
+}
+
+model Section{
+  id Int @id @default(autoincrement())
+  user_id Int
+
+  parent Course @relation("CourseSections", fields: [course_id], references: [id])
+  course_id Int
+
+  title String
+  summary String?
+  order String
+  visible Boolean @default(true)
+
+  url String? //URL to section homepage
+
+  version String //Version of section
+  meta Json? //Meta data for section
+
+  //Relations
+  modules Module[] @relation("SectionModules")
+  
+  @@index([course_id])
+}
+
+model Module{
+  id Int @id @default(autoincrement())
+  user_id Int
+  
+  parent Section @relation("SectionModules", fields: [section_id], references: [id])
+  section_id Int
+
+  title String
+  summary String?
+  order String
+  visible Boolean @default(true)
+
+  url String? //URL to module homepage
+
+  version String //Version of module
+  meta Json? //Meta data for module
+
+  //Relations
+  contents Content[] @relation("ModuleContents")
+
+  @@index([section_id])
+}
+
+model Content{
+  id Int @id @default(autoincrement())
+  user_id Int
+  
+  parent Module @relation("ModuleContents", fields: [module_id], references: [id])
+  module_id Int
+
+  slice_ids String //List of slices for content
+
+  name String
+  ext String
+  dir String
+  visible Boolean @default(true)
+
+  size Int?
+  mimetype String?
+  modified_at DateTime?
+
+  url String? //URL to content homepage
+
+  version String //Version of content
+  meta Json? //Meta data for content
+
+  @@index([module_id])
+}
+

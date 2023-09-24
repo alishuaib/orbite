@@ -1,0 +1,30 @@
+In this demonstration, we will illustrate the Pivot Table node in Knowledge Studio.
+
+To begin create a new workflow and link the census dataset.
+
+Drag the Pivot Table node, found under the manipulate palette, onto the canvas.
+
+Connect the census dataset.
+
+Double click to open the Pivot node.
+
+Set an appropriate name.
+
+We will assign a variable one of 3 roles:
+
+Pivot indicates a variable will be used as columns.
+
+Group indicates a variable will be used as rows.
+
+Selected indicates a variable will be aggregated based on Pivot and Group roles.
+
+Let's select sex as our Pivot, and Response as our group.
+
+Select age as our Selected, and use the average aggregation method.
+
+Click run to generate the output.
+
+Double click the output node and view the data tab.
+
+We can see the aggregated result for age based on our selected Sex and Response variables.
+

@@ -1,0 +1,88 @@
+Sampling and Partitioning in Knowledge Studio
+
+Let’s have a look at how to perform Sampling and Partitioning in Knowledge Studio. The Partition node allows you to sample your dataset based on Randomized or Stratified partitioning. We will go over both in this demonstration, starting with Random Sampling.
+
+To begin, first import the Census Dataset using the File Import Node. You can either drag and drop the node or right click on the canvas and choose it from the dropdown menu.
+
+Next drag the partition node, which can be found under the manipulate palette, onto the canvas.
+
+Now let’s connect the census dataset to our partition node by dragging out an arrow.
+
+Now that our partition node has turned blue, double click to open the wizard.
+
+Our goal is to partition the census dataset into 70% for Training and 30% for Validation.
+
+First click Add to create a new partition.
+
+Set an appropriate name.
+
+Under Sample Selection, set “percent of total” to 70%.
+
+Click update to create the partition.
+
+Similarly, create a second partition using 30% this time for validation.
+
+By looking at the chart we can visualize the size of each partition.
+
+On the left side we can see our allocation details.
+
+For allocation details on each partition, we can click on preview.
+
+Once we’ve confirmed everything is correct, click run.
+
+As we can see, the Partition node has created datasets for each of the 2 partitions.
+
+Next let’s look at Stratified sampling.
+
+Create a new partition node by dragging out an arrow from the census dataset.
+
+Select Partition found under the Manipulate Palette.
+
+This time we’ll change the sample type to Stratified.
+
+Stratified sampling lets us create filtered partitions based on unique values in each field.
+
+Let’s create 2 partitions based on the relationship field.
+
+Our first partition will include Husband and Wife records, while the second partition will include those Unmarried.
+
+First, click "add" and give this partition an appropriate name.
+
+Next, select "relationship" under the field dropdown.
+
+For the Husband and Wife rows displayed, change Request Number to include "all available records".
+
+Next, click "update".
+
+Similarly, create a new partition, and this time include all Unmarried records.
+
+As we can see, Husband and Wife cannot be included since we’ve already partitioned them out earlier.
+
+Click update to add the partition.
+
+After confirming everything is correct, click run to output the partitioned datasets.
+
+To confirm we’ve successfully filtered out records, let’s look at the chart for our Married dataset.
+
+As we can see, it only includes Husband and Wife.
+
+Lastly, we’ll look at one more use case for Stratified sampling.
+
+Let’s say we want to have equal number of male and female records in our dataset, we can use the partition node to achieve this.
+
+First drag out an arrow from our census dataset and create a new partition node.
+
+Next select the sample type and click add.
+
+Name this partition appropriately.
+
+Next select sex from the field dropdown.
+
+Finally include 5000 records of both male and female.
+
+Click update, then click run, to output our partitioned dataset.
+
+Let’s check out the dataset chart to view the output partitioned dataset.
+
+As we can see, both male and female records are exactly 50% of the entire dataset.
+

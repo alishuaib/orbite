@@ -1,0 +1,156 @@
+1
+00:00:00,000 --> 00:00:04,257
+Chapter 10: Ensemble Models in Knowledge Studio
+
+2
+00:00:04,257 --> 00:00:22,909
+Ensemble Models use multiple automatically grown decision trees to build a more comprehensive high performance predictive model. While they boast higher performance and automatic generation, the trees generated cannot be viewed and edited compared to the standalone decision tree node.
+
+3
+00:00:22,909 --> 00:00:29,727
+In this demonstration, we will explore Bagging, Random Forest and Boosting ensemble models.
+
+4
+00:00:29,727 --> 00:00:34,899
+To begin, let’s create a new workflow and link our Training dataset.
+
+5
+00:00:34,899 --> 00:00:41,482
+From the Model palette, let's drag each of the ensemble model nodes to the workflow canvas.
+
+6
+00:00:41,482 --> 00:00:45,661
+Next, connect the Training dataset to each node.
+
+7
+00:00:45,661 --> 00:00:49,841
+We need to configure the parameters for each ensemble model.
+
+8
+00:00:49,841 --> 00:00:53,185
+Double click “Bagging” to open the wizard.
+
+9
+00:00:53,185 --> 00:00:57,103
+Give the model an appropriate name and click “next.”
+
+10
+00:00:57,103 --> 00:01:02,145
+Select a dependent variable, in this case this will be Response.
+
+11
+00:01:02,145 --> 00:01:11,915
+Note that for Bagging and Random Forest, we can use any variable as the dependent, but for Boosting only binary variables can be used.
+
+12
+00:01:11,915 --> 00:01:25,028
+Next, select the independent variables to use in the model. We will select age, capital gain, education, hours per week, marital status, relationship and sex.
+
+13
+00:01:25,028 --> 00:01:27,901
+Click next to set parameters.
+
+14
+00:01:27,901 --> 00:01:44,698
+Under model growth, adjust the number of trees to generate. 250 trees is the default. Note that the more trees to generate, the longer the run time. For this demonstration, lets reduce this to 25 trees.
+
+15
+00:01:44,698 --> 00:01:49,243
+We can also adjust the sample size, lets use 50%.
+
+16
+00:01:49,243 --> 00:01:55,487
+The remaining parameters are the same as our decision tree node, we’ll keep the default settings.
+
+17
+00:01:55,487 --> 00:01:59,483
+After confirming everything is correct, click run.
+
+18
+00:01:59,483 --> 00:02:07,816
+Double click the model to review the parameter settings if needed. We will explore model performance later in this demo.
+
+19
+00:02:07,816 --> 00:02:12,675
+Next, double-click the Random Forest node to open the wizard.
+
+20
+00:02:12,675 --> 00:02:15,287
+Let’s use the same settings.
+
+21
+00:02:15,287 --> 00:02:29,394
+There is one additional parameter called “number of features.” We can adjust this to limit the number of independent variables used in each split - introducing variability in the trees which results in a more robust model.
+
+22
+00:02:29,394 --> 00:02:32,372
+Click “run” to generate the model.
+
+23
+00:02:32,372 --> 00:02:35,767
+Next, double-click on the Boosting node.
+
+24
+00:02:35,767 --> 00:02:38,667
+We will use the same settings again.
+
+25
+00:02:38,667 --> 00:02:50,501
+As you can see, we can only select binary dependent variables in boosting. Select Response and change the Target category to “Yes” before continuing.
+
+26
+00:02:50,501 --> 00:02:55,882
+Now that we have our models, let's connect them to a Model Validation node.
+
+27
+00:02:55,882 --> 00:02:59,278
+Let’s also connect our Training dataset.
+
+28
+00:02:59,278 --> 00:03:03,562
+Once the nodes turn blue, we can adjust the parameters.
+
+29
+00:03:03,562 --> 00:03:09,936
+For cut off values set 0.3 for yes and 0.7 for no.
+
+30
+00:03:09,936 --> 00:03:21,194
+Once we have the output for all 3 validation nodes, let's drag a Model Analyzer node from the evaluate palette to the canvas and connect each of the outputs generated.
+
+31
+00:03:21,194 --> 00:03:30,024
+Since we will be comparing the models, let's also bring in our previously generated interactive decision tree validation and connect it as well.
+
+32
+00:03:30,024 --> 00:03:35,797
+Once all 4 validation outputs are connected, double click to open the wizard.
+
+33
+00:03:35,797 --> 00:03:43,163
+For each tab, change the predicted value and probability score to "yes" and assign an appropriate name.
+
+34
+00:03:43,163 --> 00:03:44,809
+Click run.
+
+35
+00:03:44,809 --> 00:03:50,530
+Once the status changes to green, double click to view the analyzer results.
+
+36
+00:03:50,530 --> 00:03:54,344
+Now we can compare the performances for each model.
+
+37
+00:03:54,344 --> 00:04:02,964
+As we can see, all 3 ensemble models are out performing our interactive decision tree shown in the statistics and charts.
+
+38
+00:04:02,964 --> 00:04:08,842
+If we look at the ROC chart we can compare the AUC statistic for each model.
+
+39
+00:04:08,842 --> 00:04:14,536
+Ensemble models and the model analyzer node can help us develop more comprehensive models to achieve better performance.
+
