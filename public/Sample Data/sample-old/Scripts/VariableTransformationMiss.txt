@@ -1,0 +1,90 @@
+Knowledge Studio provides a powerful node called Variable Transform, which lets you add transformed fields to your dataset.
+
+Let’s have a look at how we can apply variable transformations.
+
+Missing Values
+
+We will look at how to examine missing values.
+
+To begin, create a new workflow.
+
+Link or Import the Census dataset.
+
+Drag the Variable Transform node from the manipulate palette onto the canvas.
+
+Connect the Census dataset.
+
+Double click to open the wizard.
+
+Set an appropriate target dataset name.
+
+We will first look at how we can examine missing values.
+
+Click “Calculate % Missing” to see the amount of missing values per field.
+
+Here, we can see capital-gain has many missing values, we will handle this later in the demonstration.
+
+For now, let’s apply a logarithmic transform to capital gain.
+
+Click add field.
+
+Set an appropriate field name.
+
+Now we can either write the expression or we can use the function list to find our function of interest.
+
+Let’s click functions and then select the math category.
+
+If we scroll down we can see log, double click to add it to the expression.
+
+The log function only accepts a numeric float value, in our case we want to use capital gain.
+
+Again, we can either write capital gain or we can use the columns list to find it.
+
+Click on columns and find capital gain, double click to insert it at your cursor location.
+
+Let’s also add 1, to account for missing values we saw previously.
+
+Before we click ok, we also want to enable “Force data to be instantiated” to ensure these transforms are written to our stored dataset.
+
+In this case, we want to apply this transformation to multiple fields, such as capital gain and capital loss. We can do so by clicking transform fields.
+
+We need to select the fields we want to transform.
+
+Next write out the expression but instead of using a specific column we use Selected Field.
+
+Enable “Force data to be instantiated”.
+
+Click ok to create the new transformed fields.
+
+Binning
+
+Let’s have a look at how we can apply variable transformations using binning. We will continue from our missing values demo. Double click to open the existing variable transform node.
+
+Now, let’s create a new binning transform for the relationship variable.
+
+Click add field and set an appropriate name.
+
+Since binning can require complex expressions, we can use helpers to assist us.
+
+Click helpers.
+
+Select binning from the drop down menu and click next.
+
+Switch to discrete transform and select relationship.
+
+Click next.
+
+Using the range editor, group Husband and Wife into Married.
+
+Group Not-in-family, Other-relative and Own-child into Other.
+
+Click next.
+
+Now we can see the created expression without the need of writing it out, lets click finish.
+
+We can preview the transformation by clicking show data then clicking refresh.
+
+Click ok to create the field.
+
+Now let's have a look at the bins we created.
+

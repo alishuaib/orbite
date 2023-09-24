@@ -1,0 +1,84 @@
+1
+00:00:00,000 --> 00:00:10,736
+As can be seen there are 7 tabs in the Model Analysis Report: Summary, Statistics, Gains Chart, K-S Chart, ROC Chart, Lift chart and confusion matrix.
+
+2
+00:00:10,736 --> 00:00:20,218
+The summary tab provides a view of the charts available from their respective tabs and the statistics tab provides an array of statistics for each connected scored dataset.
+
+3
+00:00:20,218 --> 00:00:36,153
+The overall predictive accuracy of the model is high at approximately .84, but this is due to the high classification rate of the other category, good, at approximately .95, as the target category classification rate is low at approximately .48.
+
+4
+00:00:36,153 --> 00:00:45,870
+Precision is good at approximately .76, meaning that when an observation is predicted as bad, the model is correct 76% of the time.
+
+5
+00:00:45,870 --> 00:01:04,313
+The F1 statistic is another measure of model accuracy and at approximately .59 puts the weighted accuracy figure into perspective; that on average the model predictions are approximately 60% accurate. The C-Statistic and K-S Test values exceed requirements for model acceptability.
+
+6
+00:01:04,313 --> 00:01:24,401
+To statistically validate the model, it is better to compare statistics across scored partitions. To do this, another Score block is added to the Workflow followed by connecting the testing partition and model. The scored output dataset is renamed to "test scored", connected to the Analyze Models block and configured as before.
+
+7
+00:01:24,401 --> 00:01:33,622
+Clicking Apply and Close runs the report, opening and returning to the statistics page, as can be seen statistics are generated for both connected datasets.
+
+8
+00:01:33,622 --> 00:01:53,710
+The statistic in bold highlights the connected dataset with the higher score for that statistic. In general, there is little difference in statistics across scored partitions. The C-Statistic is in excess of .75 which is generally the accepted cutoff for a good model, and values can be compared across partitions.
+
+9
+00:01:53,710 --> 00:02:05,753
+This suffices to statistically validate the decision tree model. The next step is to structurally validate the tree. This compares the tree structure across partitions.
+
+10
+00:02:05,753 --> 00:02:23,385
+The way to accomplish this is to duplicate the Decision Tree block on the canvas and connect the testing partition before opening the block. A message will appear asking, "do you wish to recalculate node frequencies?". Clicking YES, updates node frequencies with the testing partition data.
+
+11
+00:02:23,385 --> 00:02:28,584
+To view and compare the tree structure, the screen is split to view both trees.
+
+12
+00:02:28,584 --> 00:02:41,149
+Structural validation is a simple comparison of the nodes across the model applied to both partitions. It is desirable to see consistency in the distribution of the dependent variable across nodes.
+
+13
+00:02:41,149 --> 00:02:54,680
+For this model, there is a little bit of a discrepancy in terms of the DV distribution for the occupation split. The values vary slightly with the largest deviation evident for node 23 where there is a 5% difference.
+
+14
+00:02:54,680 --> 00:03:14,664
+To address this, node 23 is merged with node 22 for both partitions. The largest deviation for the variable occupation is now 3% for node 19 and also node 20. This is accepted here but further merging could be performed to attempt to more closely match the dependent variable distributions.
+
+15
+00:03:14,664 --> 00:03:24,799
+The capital_gain split validates well as do all other node distributions, at this point the statistics generated previously must be updated as a result of changing the tree.
+
+16
+00:03:24,799 --> 00:03:42,327
+This is easy to accomplish, first the tree created using the development partition is saved using the keyboard shortcut CTRL+S, notice the asterisk has disappeared. Auto-run takes care of re-scoring and it’s simply a matter of opening the Model Analysis Report to access updated results.
+
+17
+00:03:42,327 --> 00:03:57,191
+Statistics have changed minimally and they are comparable across partitions. Notice that most values are well matched. The C-Statistic and K-S Test value have dropped slightly but are still acceptable and the model validates.
+
+18
+00:03:57,191 --> 00:04:08,737
+Business validation can be assessed by viewing charts. Selecting the Gains Chart tab, two lines are present, one for the model applied to each partition and both are tracking well.
+
+19
+00:04:08,737 --> 00:04:18,794
+Notice the jaggedness of the lines. This is due to groups of observations being assigned the same value as a result of being members of the same decision tree node.
+
+20
+00:04:18,794 --> 00:04:32,300
+The model performs well but there is a slight dip toward the latter deciles. Clicking the K-S chart tab, this replicates the gains chart but adds a line for the non-target category and the K-S values for both partitions.
+
+21
+00:04:32,300 --> 00:04:38,203
+See the text for detailed descriptions on other charts found in the model analysis report.
+

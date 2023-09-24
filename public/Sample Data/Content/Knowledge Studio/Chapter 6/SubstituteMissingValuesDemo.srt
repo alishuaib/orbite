@@ -1,0 +1,76 @@
+1
+00:00:00,000 --> 00:00:02,690
+Substitute Missing Values
+
+2
+00:00:02,690 --> 00:00:07,418
+This demonstration will illustrate the Substitute Missing Values node.
+
+3
+00:00:07,418 --> 00:00:12,120
+First, create a new workflow and link the Census dataset.
+
+4
+00:00:12,120 --> 00:00:18,808
+Let’s begin by dragging the Substitute Missing Values node onto the canvas from the manipulate palette
+
+5
+00:00:18,808 --> 00:00:24,110
+Connect the census dataset. Double click the Census dataset.
+
+6
+00:00:24,110 --> 00:00:26,488
+Click “Calculate all”.
+
+7
+00:00:26,488 --> 00:00:32,992
+We can see which fields have missing values. In this case it is only capital gain.
+
+8
+00:00:32,992 --> 00:00:38,164
+Click the data tab and select “capital gain” and observe the null values.
+
+9
+00:00:38,164 --> 00:00:44,120
+Head back to the workflow canvas and double click the substitute missing values node.
+
+10
+00:00:44,120 --> 00:00:46,445
+Set an appropriate name.
+
+11
+00:00:46,445 --> 00:00:53,498
+Under “Missing Values Substitution” we can select the substitution method to use for each data type.
+
+12
+00:00:53,498 --> 00:00:59,193
+Since “capital gain” is numeric, we are only concerned with the first data type.
+
+13
+00:00:59,193 --> 00:01:08,048
+We want to indicate null values are equivalent to zero gain. To do so, let’s select the “Zero” method for Numeric.
+
+14
+00:01:08,048 --> 00:01:12,515
+Next, let’s select “capital gain” from the field list.
+
+15
+00:01:12,515 --> 00:01:15,545
+Click run to generate the output.
+
+16
+00:01:15,545 --> 00:01:19,412
+Double click the output and click “Calculate All”.
+
+17
+00:01:19,412 --> 00:01:28,345
+The “number of Missing Values” column for “capital gain” now shows 0 indicating we’ve successfully substituted the missing values.
+
+18
+00:01:28,345 --> 00:01:32,029
+Head to the data tab and select “capital gain”
+
+19
+00:01:32,029 --> 00:01:37,123
+As we can see, the null values have been substituted with zero.
+

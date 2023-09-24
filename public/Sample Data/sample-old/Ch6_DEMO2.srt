@@ -1,0 +1,1523 @@
+1
+00:00:00,000 --> 00:00:04,785
+Now, let's connect
+the census data
+
+2
+00:00:04,785 --> 00:00:09,105
+to variable
+transformation node.
+
+3
+00:00:09,105 --> 00:00:10,710
+And let's open the variable
+
+4
+00:00:10,710 --> 00:00:13,035
+transformation known.
+
+5
+00:00:13,035 --> 00:00:16,080
+We talked about this
+missing percentage
+
+6
+00:00:16,080 --> 00:00:17,580
+of missing value column.
+
+7
+00:00:17,580 --> 00:00:19,305
+If I just click this,
+
+8
+00:00:19,305 --> 00:00:21,735
+it generates that for me.
+
+9
+00:00:21,735 --> 00:00:23,925
+I can see that I have
+
+10
+00:00:23,925 --> 00:00:26,745
+some missing values
+in capital gain.
+
+11
+00:00:26,745 --> 00:00:28,890
+Now, if I want to,
+
+12
+00:00:28,890 --> 00:00:30,675
+let's say, add a field,
+
+13
+00:00:30,675 --> 00:00:33,645
+and let's say I want
+to look our transform,
+
+14
+00:00:33,645 --> 00:00:38,280
+the capital gain,
+just click Add Field.
+
+15
+00:00:38,280 --> 00:00:42,410
+And by default, it gives
+this filled 15 name.
+
+16
+00:00:42,410 --> 00:00:45,155
+But I can just rename
+it and I call it
+
+17
+00:00:45,155 --> 00:00:49,370
+like log capital gain.
+
+18
+00:00:49,370 --> 00:00:52,280
+Okay? And I don't know how
+
+19
+00:00:52,280 --> 00:00:54,755
+to do the log
+transformations,
+
+20
+00:00:54,755 --> 00:00:56,435
+so I'll go to function.
+
+21
+00:00:56,435 --> 00:00:57,919
+When I click functions,
+
+22
+00:00:57,919 --> 00:01:00,589
+you see bunch of
+functions, categories,
+
+23
+00:01:00,589 --> 00:01:03,410
+math, general
+string, aggregate,
+
+24
+00:01:03,410 --> 00:01:05,090
+and so on to math function
+
+25
+00:01:05,090 --> 00:01:06,170
+that I'm looking for.
+
+26
+00:01:06,170 --> 00:01:08,945
+And there are a bunch
+of them listed here.
+
+27
+00:01:08,945 --> 00:01:12,440
+And then I select,
+for example, Locke.
+
+28
+00:01:12,440 --> 00:01:15,335
+All right, so when I
+double-click on it,
+
+29
+00:01:15,335 --> 00:01:18,140
+it somehow gives me
+the information.
+
+30
+00:01:18,140 --> 00:01:21,860
+So inside the bracket
+you see it says
+
+31
+00:01:21,860 --> 00:01:26,315
+log transformation
+accept a flow value
+
+32
+00:01:26,315 --> 00:01:27,680
+has to be numeric.
+
+33
+00:01:27,680 --> 00:01:29,314
+I can't log transform
+
+34
+00:01:29,314 --> 00:01:32,150
+the education
+variable, for example.
+
+35
+00:01:32,150 --> 00:01:33,860
+But I want to do
+capital gains.
+
+36
+00:01:33,860 --> 00:01:35,930
+So now I can,
+
+37
+00:01:35,930 --> 00:01:38,255
+if I already know
+what the name of
+
+38
+00:01:38,255 --> 00:01:40,865
+the column is
+with proper name,
+
+39
+00:01:40,865 --> 00:01:42,380
+I can just type it.
+
+40
+00:01:42,380 --> 00:01:43,805
+But if I don't,
+
+41
+00:01:43,805 --> 00:01:47,315
+I can always go to
+this list of columns.
+
+42
+00:01:47,315 --> 00:01:48,860
+I just click on
+this columns
+
+43
+00:01:48,860 --> 00:01:50,000
+here and shows me
+
+44
+00:01:50,000 --> 00:01:53,330
+the list of variables
+I have in my data set.
+
+45
+00:01:53,330 --> 00:01:55,040
+And then I choose capital
+
+46
+00:01:55,040 --> 00:01:58,280
+K. Remember my cursor
+
+47
+00:01:58,280 --> 00:02:00,050
+was inside the brackets.
+
+48
+00:02:00,050 --> 00:02:02,060
+So when I click
+this capital a,
+
+49
+00:02:02,060 --> 00:02:04,145
+it automatically
+keeps back.
+
+50
+00:02:04,145 --> 00:02:07,070
+Maybe I say plus one.
+And why is that?
+
+51
+00:02:07,070 --> 00:02:09,050
+Because they have
+so many nulls in
+
+52
+00:02:09,050 --> 00:02:11,420
+capital gain log of null,
+
+53
+00:02:11,420 --> 00:02:12,710
+I don't get an erasure,
+
+54
+00:02:12,710 --> 00:02:14,555
+so I'll just say plus one.
+
+55
+00:02:14,555 --> 00:02:16,115
+So at least, sorry,
+
+56
+00:02:16,115 --> 00:02:17,900
+it should be
+insight at this to
+
+57
+00:02:17,900 --> 00:02:21,530
+get the 0 value anyway.
+
+58
+00:02:21,530 --> 00:02:24,680
+And then I force data
+to be instantiated.
+
+59
+00:02:24,680 --> 00:02:27,125
+So if I don't do
+that, the lake in,
+
+60
+00:02:27,125 --> 00:02:28,910
+on this, the actual column
+
+61
+00:02:28,910 --> 00:02:30,155
+doesn't get created.
+
+62
+00:02:30,155 --> 00:02:32,735
+Only this formula is
+
+63
+00:02:32,735 --> 00:02:35,480
+going to be kd over
+with my datasets.
+
+64
+00:02:35,480 --> 00:02:36,890
+So I always like
+
+65
+00:02:36,890 --> 00:02:39,740
+to force data to
+be instantiated.
+
+66
+00:02:39,740 --> 00:02:40,760
+Again, it depends on how
+
+67
+00:02:40,760 --> 00:02:43,684
+much disk you
+huh, available.
+
+68
+00:02:43,684 --> 00:02:45,139
+And then I click Validate,
+
+69
+00:02:45,139 --> 00:02:47,780
+it's okay, it works fine.
+
+70
+00:02:47,780 --> 00:02:49,460
+And I click OK, right?
+
+71
+00:02:49,460 --> 00:02:51,560
+So this is how I create
+
+72
+00:02:51,560 --> 00:02:56,210
+a new column to my dataset.
+
+73
+00:02:56,210 --> 00:02:59,660
+Now, let's say I
+wanted to apply
+
+74
+00:02:59,660 --> 00:03:02,480
+this log transformation to
+
+75
+00:03:02,480 --> 00:03:04,790
+both capital gain
+and capital loss,
+
+76
+00:03:04,790 --> 00:03:06,470
+but I don't wanna
+do it twice.
+
+77
+00:03:06,470 --> 00:03:08,585
+What could I have done?
+
+78
+00:03:08,585 --> 00:03:10,880
+Could have done.
+I could have
+
+79
+00:03:10,880 --> 00:03:14,340
+gotten to this
+transform fields.
+
+80
+00:03:14,680 --> 00:03:18,290
+And here you see the
+expression area.
+
+81
+00:03:18,290 --> 00:03:20,210
+It says selected fields,
+
+82
+00:03:20,210 --> 00:03:21,725
+so it applies
+
+83
+00:03:21,725 --> 00:03:25,070
+whatever expression
+I want into.
+
+84
+00:03:25,070 --> 00:03:27,140
+A list of columns that a
+
+85
+00:03:27,140 --> 00:03:29,090
+select in the
+selected area.
+
+86
+00:03:29,090 --> 00:03:30,770
+So I pick capital gain,
+
+87
+00:03:30,770 --> 00:03:34,670
+capital loss, put it
+in the selected area.
+
+88
+00:03:34,670 --> 00:03:38,810
+By default, it
+takes the name of
+
+89
+00:03:38,810 --> 00:03:41,360
+the actual column
+and add the prefix
+
+90
+00:03:41,360 --> 00:03:44,150
+of x, PR,
+underscore, tweet.
+
+91
+00:03:44,150 --> 00:03:45,920
+If you want to modify this,
+
+92
+00:03:45,920 --> 00:03:47,915
+please go ahead and do so.
+
+93
+00:03:47,915 --> 00:03:49,940
+You can, you can
+either choose
+
+94
+00:03:49,940 --> 00:03:51,620
+prefixed are
+actually suffix.
+
+95
+00:03:51,620 --> 00:03:54,155
+It can change the suffix,
+
+96
+00:03:54,155 --> 00:03:56,300
+prefix, whatever
+works for you.
+
+97
+00:03:56,300 --> 00:03:58,280
+Again, I would like to say
+
+98
+00:03:58,280 --> 00:04:00,590
+cross theta to
+be instantiated.
+
+99
+00:04:00,590 --> 00:04:02,810
+And then here I say, OK,
+
+100
+00:04:02,810 --> 00:04:05,900
+maybe do this, sorry,
+
+101
+00:04:05,900 --> 00:04:11,290
+log transform on both
+
+102
+00:04:11,290 --> 00:04:14,860
+of these files and
+both of these columns.
+
+103
+00:04:14,860 --> 00:04:16,345
+Click validate.
+
+104
+00:04:16,345 --> 00:04:19,465
+It tells me that. Span it.
+
+105
+00:04:19,465 --> 00:04:22,630
+Click OK. And you see how
+
+106
+00:04:22,630 --> 00:04:26,230
+these two columns
+got created.
+
+107
+00:04:26,230 --> 00:04:29,035
+So by just writing
+one expression,
+
+108
+00:04:29,035 --> 00:04:31,030
+I applied the
+same expression
+
+109
+00:04:31,030 --> 00:04:32,365
+into multiple columns.
+
+110
+00:04:32,365 --> 00:04:35,275
+That's about
+transform field.
+
+111
+00:04:35,275 --> 00:04:38,335
+Let's go back to
+this capital gain,
+
+112
+00:04:38,335 --> 00:04:40,900
+just log capital gain
+or they created,
+
+113
+00:04:40,900 --> 00:04:43,105
+if I go back to edit field,
+
+114
+00:04:43,105 --> 00:04:45,895
+and let's say that
+
+115
+00:04:45,895 --> 00:04:50,085
+I want to use a
+specific function,
+
+116
+00:04:50,085 --> 00:04:53,195
+but I don't know
+what the syntax is.
+
+117
+00:04:53,195 --> 00:04:57,170
+There's this syntax help
+bitches, hyperlink.
+
+118
+00:04:57,170 --> 00:04:59,015
+You can just click on it.
+
+119
+00:04:59,015 --> 00:05:00,680
+This Hayes shows you
+
+120
+00:05:00,680 --> 00:05:02,660
+all the syntaxes
+that domain is.
+
+121
+00:05:02,660 --> 00:05:04,205
+So for example, if
+
+122
+00:05:04,205 --> 00:05:06,545
+you want to
+modify a string,
+
+123
+00:05:06,545 --> 00:05:08,150
+you just click on
+this a string.
+
+124
+00:05:08,150 --> 00:05:09,860
+It gives you all
+the functions
+
+125
+00:05:09,860 --> 00:05:10,940
+we have available.
+
+126
+00:05:10,940 --> 00:05:14,120
+And let say you want
+to apply our dream,
+
+127
+00:05:14,120 --> 00:05:16,475
+which is trim spaces
+
+128
+00:05:16,475 --> 00:05:19,700
+of specific texts
+from the right side.
+
+129
+00:05:19,700 --> 00:05:21,410
+So remove their spaces.
+
+130
+00:05:21,410 --> 00:05:24,110
+So if I don't know
+what the syntax is,
+
+131
+00:05:24,110 --> 00:05:26,480
+I go here or again,
+
+132
+00:05:26,480 --> 00:05:28,760
+I'll scroll all the
+way to the top.
+
+133
+00:05:28,760 --> 00:05:30,245
+I'll go to general.
+
+134
+00:05:30,245 --> 00:05:33,335
+I don't know how to
+write a case statement.
+
+135
+00:05:33,335 --> 00:05:36,920
+Case. And then here
+I have an example to
+
+136
+00:05:36,920 --> 00:05:41,255
+see how the Syntax works.
+
+137
+00:05:41,255 --> 00:05:45,185
+Alright? So a lot of
+functions are available.
+
+138
+00:05:45,185 --> 00:05:47,450
+Yeah, I never had issues
+
+139
+00:05:47,450 --> 00:05:48,980
+like finding something that
+
+140
+00:05:48,980 --> 00:05:50,030
+they need in here.
+
+141
+00:05:50,030 --> 00:05:51,815
+Mostly straightforward.
+
+142
+00:05:51,815 --> 00:05:54,770
+So here I created
+these three variables.
+
+143
+00:05:54,770 --> 00:05:56,960
+Now, the other thing,
+
+144
+00:05:56,960 --> 00:05:58,430
+there's actually easy aside
+
+145
+00:05:58,430 --> 00:06:01,220
+from writing
+expression myself,
+
+146
+00:06:01,220 --> 00:06:04,520
+let's say I click
+this Add Field and I
+
+147
+00:06:04,520 --> 00:06:05,975
+want to create
+
+148
+00:06:05,975 --> 00:06:09,035
+a new variable
+call relationship.
+
+149
+00:06:09,035 --> 00:06:10,700
+And I at number
+
+150
+00:06:10,700 --> 00:06:12,650
+two to it because
+I want to create
+
+151
+00:06:12,650 --> 00:06:15,020
+a different
+binning structure
+
+152
+00:06:15,020 --> 00:06:17,720
+for my variable
+relationship.
+
+153
+00:06:17,720 --> 00:06:20,420
+And if I, if I already know
+
+154
+00:06:20,420 --> 00:06:24,065
+all the categories and
+how I want to bin it,
+
+155
+00:06:24,065 --> 00:06:27,335
+I can just start writing
+my cases statement.
+
+156
+00:06:27,335 --> 00:06:29,090
+But I am usually lazy.
+
+157
+00:06:29,090 --> 00:06:29,840
+I just go through
+
+158
+00:06:29,840 --> 00:06:33,110
+this helper menu,
+click helper.
+
+159
+00:06:33,110 --> 00:06:36,000
+And the first option
+and the most common.
+
+160
+00:06:36,000 --> 00:06:37,390
+Technique that we use
+
+161
+00:06:37,390 --> 00:06:39,415
+the spinning epic bidding.
+
+162
+00:06:39,415 --> 00:06:42,880
+Again, there are a
+bunch of helpers here.
+
+163
+00:06:42,880 --> 00:06:46,000
+For example, generation
+of dummy variables
+
+164
+00:06:46,000 --> 00:06:49,210
+or even this
+lager transform.
+
+165
+00:06:49,210 --> 00:06:51,655
+You could objects
+created at true here,
+
+166
+00:06:51,655 --> 00:06:54,065
+optimal binning power
+
+167
+00:06:54,065 --> 00:06:57,625
+transform substitute
+missing values.
+
+168
+00:06:57,625 --> 00:06:59,979
+Creation of vague variable.
+
+169
+00:06:59,979 --> 00:07:04,615
+Anyway. So I go through
+binning and you see
+
+170
+00:07:04,615 --> 00:07:06,430
+first it shows me
+
+171
+00:07:06,430 --> 00:07:07,660
+the continuous
+
+172
+00:07:07,660 --> 00:07:09,700
+valuable only if
+like relationship.
+
+173
+00:07:09,700 --> 00:07:11,860
+It doesn't show
+here because by
+
+174
+00:07:11,860 --> 00:07:13,390
+default the helper type
+
+175
+00:07:13,390 --> 00:07:14,800
+is continuous spinning.
+
+176
+00:07:14,800 --> 00:07:16,750
+But I'm looking for
+a relationship which
+
+177
+00:07:16,750 --> 00:07:19,490
+is a category variable.
+
+178
+00:07:19,490 --> 00:07:21,230
+So I choose discrete.
+
+179
+00:07:21,230 --> 00:07:24,845
+I have the list of all
+the string variables,
+
+180
+00:07:24,845 --> 00:07:26,435
+and I pick relationship,
+
+181
+00:07:26,435 --> 00:07:28,205
+and then I click next.
+
+182
+00:07:28,205 --> 00:07:29,870
+Again, I get this
+
+183
+00:07:29,870 --> 00:07:33,215
+popular range
+editor window.
+
+184
+00:07:33,215 --> 00:07:34,895
+Now here I say OK,
+
+185
+00:07:34,895 --> 00:07:37,790
+I want to combine
+husband and wife
+
+186
+00:07:37,790 --> 00:07:41,945
+and group them and
+call them married.
+
+187
+00:07:41,945 --> 00:07:46,295
+And then I have
+these other ones.
+
+188
+00:07:46,295 --> 00:07:53,220
+I group them and
+call them Other.
+
+189
+00:07:53,290 --> 00:07:55,700
+And then the last one is
+
+190
+00:07:55,700 --> 00:07:57,245
+just itself on married.
+
+191
+00:07:57,245 --> 00:07:59,300
+I'm not going to touch it.
+
+192
+00:07:59,300 --> 00:08:02,300
+And I click and you
+
+193
+00:08:02,300 --> 00:08:04,970
+see how it creates
+the quote for me.
+
+194
+00:08:04,970 --> 00:08:07,160
+So casement relationship in
+
+195
+00:08:07,160 --> 00:08:09,890
+husband and wife and
+married and so on.
+
+196
+00:08:09,890 --> 00:08:11,150
+So it create, it generates
+
+197
+00:08:11,150 --> 00:08:14,150
+the code for me when
+I click Finish,
+
+198
+00:08:14,150 --> 00:08:17,630
+already pasted in
+my expression area.
+
+199
+00:08:17,630 --> 00:08:20,690
+And again, for theta
+to be instantiated,
+
+200
+00:08:20,690 --> 00:08:22,655
+you don't need
+to do duties.
+
+201
+00:08:22,655 --> 00:08:25,850
+I'm just used
+to it so much.
+
+202
+00:08:25,850 --> 00:08:30,290
+And by the way, if you
+want to look at data,
+
+203
+00:08:30,290 --> 00:08:32,810
+you can just kick
+that showed a top,
+
+204
+00:08:32,810 --> 00:08:35,285
+bottom and then refresh
+
+205
+00:08:35,285 --> 00:08:38,270
+to make sure that
+you've like this.
+
+206
+00:08:38,270 --> 00:08:40,970
+Like what do we get out
+of this expression?
+
+207
+00:08:40,970 --> 00:08:44,615
+So tells me that the
+first row becomes Other.
+
+208
+00:08:44,615 --> 00:08:45,680
+So you make sure
+
+209
+00:08:45,680 --> 00:08:50,750
+that you get what
+you intended to.
+
+210
+00:08:50,750 --> 00:08:53,900
+Alright? So I say, okay,
+
+211
+00:08:53,900 --> 00:08:55,970
+and again here we
+
+212
+00:08:55,970 --> 00:08:57,800
+have the option
+of data preview.
+
+213
+00:08:57,800 --> 00:08:59,390
+Again, you can
+click always show
+
+214
+00:08:59,390 --> 00:09:01,865
+data, refresh.
+
+215
+00:09:01,865 --> 00:09:04,985
+And now it shows me
+the entire data.
+
+216
+00:09:04,985 --> 00:09:06,860
+With data malleable.
+
+217
+00:09:06,860 --> 00:09:09,260
+That's about binning.
+
+218
+00:09:09,260 --> 00:09:11,645
+Let's do substitute
+missing values.
+
+219
+00:09:11,645 --> 00:09:16,160
+So by again I add
+field and then I
+
+220
+00:09:16,160 --> 00:09:21,920
+say capital gain missing.
+
+221
+00:09:21,920 --> 00:09:24,320
+Alright? And I go to help
+
+222
+00:09:24,320 --> 00:09:28,765
+her and I choose
+substitute missing value.
+
+223
+00:09:28,765 --> 00:09:31,044
+I click next.
+
+224
+00:09:31,044 --> 00:09:36,160
+It says, select a
+variable or rate.
+
+225
+00:09:36,160 --> 00:09:38,395
+I want capital gain.
+
+226
+00:09:38,395 --> 00:09:40,120
+What do you want to replace
+
+227
+00:09:40,120 --> 00:09:41,260
+the missing values with?
+
+228
+00:09:41,260 --> 00:09:44,200
+You want to replace
+it with mean,
+
+229
+00:09:44,200 --> 00:09:46,990
+median mode, max means 0,
+
+230
+00:09:46,990 --> 00:09:50,260
+or you want to create
+your custom expression.
+
+231
+00:09:50,260 --> 00:09:52,615
+I'm saying explain
+custom value.
+
+232
+00:09:52,615 --> 00:09:54,175
+So if you want
+to, let's say,
+
+233
+00:09:54,175 --> 00:09:58,705
+assign a code to whoever
+capital gain is.
+
+234
+00:09:58,705 --> 00:10:01,660
+Let's say now you
+want to serve,
+
+235
+00:10:01,660 --> 00:10:04,165
+now you want to
+assign 9999.
+
+236
+00:10:04,165 --> 00:10:08,005
+You can do so. But
+anyway, for this.
+
+237
+00:10:08,005 --> 00:10:10,330
+Case I, for this
+demonstration,
+
+238
+00:10:10,330 --> 00:10:13,850
+I just take the mean.
+
+239
+00:10:14,430 --> 00:10:17,140
+And then you can
+see that how it
+
+240
+00:10:17,140 --> 00:10:18,925
+creates the case
+statement again,
+
+241
+00:10:18,925 --> 00:10:23,200
+when it's now, it
+gives me the average.
+
+242
+00:10:23,200 --> 00:10:27,620
+Otherwise it just keeps
+the original value.
+
+243
+00:10:28,290 --> 00:10:33,475
+So that's four bobsled,
+two missing value.
+
+244
+00:10:33,475 --> 00:10:36,190
+So you can create that
+vague variable here,
+
+245
+00:10:36,190 --> 00:10:39,685
+true helper options,
+say my dataset.
+
+246
+00:10:39,685 --> 00:10:42,490
+Remember that I
+didn't have equaled
+
+247
+00:10:42,490 --> 00:10:45,790
+portion on male and
+female categories.
+
+248
+00:10:45,790 --> 00:10:47,530
+But my hope is
+
+249
+00:10:47,530 --> 00:10:49,930
+to create a wait
+for that variable.
+
+250
+00:10:49,930 --> 00:10:52,640
+So my expression
+type is weight.
+
+251
+00:10:52,640 --> 00:10:56,285
+And I say I choose
+the effects variable.
+
+252
+00:10:56,285 --> 00:10:58,850
+And then this is the
+proportions right
+
+253
+00:10:58,850 --> 00:11:03,230
+now, 33% versus 66%.
+
+254
+00:11:03,230 --> 00:11:06,140
+My geologist choose
+the percentage.
+
+255
+00:11:06,140 --> 00:11:07,820
+Let's say if you
+want to create
+
+256
+00:11:07,820 --> 00:11:10,175
+equal portions,
+
+257
+00:11:10,175 --> 00:11:13,790
+you just assign
+50-50 percent weight
+
+258
+00:11:13,790 --> 00:11:15,470
+to each category and then
+
+259
+00:11:15,470 --> 00:11:17,375
+it generates the
+number for me.
+
+260
+00:11:17,375 --> 00:11:21,890
+So for each record
+with sex in female,
+
+261
+00:11:21,890 --> 00:11:24,890
+they get 1.51 versus
+
+262
+00:11:24,890 --> 00:11:27,800
+males that got almost 0.75.
+
+263
+00:11:27,800 --> 00:11:31,050
+And I'll just
+call this weight.
+
+264
+00:11:31,390 --> 00:11:38,150
+Okay? And then I
+click OK. Now I've
+
+265
+00:11:38,150 --> 00:11:39,515
+created a bunch of
+
+266
+00:11:39,515 --> 00:11:44,510
+new variables to my
+existing dataset.
+
+267
+00:11:44,510 --> 00:11:49,250
+I click Run census one
+as my output data.
+
+268
+00:11:49,250 --> 00:11:53,225
+No CDs are all my
+new variables.
+
+269
+00:11:53,225 --> 00:11:55,340
+Or go to the Data tab,
+
+270
+00:11:55,340 --> 00:11:58,770
+let's just ignore
+some of these.
+
+271
+00:11:59,620 --> 00:12:02,315
+These are my new
+variables like
+
+272
+00:12:02,315 --> 00:12:04,010
+log transformation of
+
+273
+00:12:04,010 --> 00:12:07,250
+capital gain or
+capital loss.
+
+274
+00:12:07,250 --> 00:12:10,835
+Relationship.
+Number two, also,
+
+275
+00:12:10,835 --> 00:12:12,845
+this person,
+customer ID number
+
+276
+00:12:12,845 --> 00:12:14,360
+four is husband.
+
+277
+00:12:14,360 --> 00:12:16,010
+But now I have
+this new group.
+
+278
+00:12:16,010 --> 00:12:17,210
+I've put him, put them
+
+279
+00:12:17,210 --> 00:12:19,895
+under married capital gain,
+
+280
+00:12:19,895 --> 00:12:21,470
+like here is no,
+
+281
+00:12:21,470 --> 00:12:23,675
+but the capital
+gain, this column,
+
+282
+00:12:23,675 --> 00:12:25,370
+I replace null with
+
+283
+00:12:25,370 --> 00:12:28,879
+the average of capital
+gain in my dataset.
+
+284
+00:12:28,879 --> 00:12:30,680
+So every null, all of
+
+285
+00:12:30,680 --> 00:12:34,355
+the knowledge
+replace with 1354.
+
+286
+00:12:34,355 --> 00:12:36,590
+And then this weight sex.
+
+287
+00:12:36,590 --> 00:12:38,780
+So how do I use
+this weight?
+
+288
+00:12:38,780 --> 00:12:40,460
+This is my
+original data set.
+
+289
+00:12:40,460 --> 00:12:44,150
+So I look at the sex or
+go to Dataset chart.
+
+290
+00:12:44,150 --> 00:12:49,445
+I have 33% versus 66.
+
+291
+00:12:49,445 --> 00:12:52,740
+I'll just put
+it on the site.
+
+292
+00:12:52,960 --> 00:12:58,325
+All right, now, if
+I choose paychecks,
+
+293
+00:12:58,325 --> 00:13:00,920
+I see this thing is
+
+294
+00:13:00,920 --> 00:13:05,030
+just the frequency
+again, similar.
+
+295
+00:13:05,030 --> 00:13:06,980
+Now on the top you
+
+296
+00:13:06,980 --> 00:13:09,575
+see there is this
+weight option.
+
+297
+00:13:09,575 --> 00:13:12,725
+If I open the dropdown,
+
+298
+00:13:12,725 --> 00:13:13,880
+I see the list of all
+
+299
+00:13:13,880 --> 00:13:16,835
+numeric values in my data.
+
+300
+00:13:16,835 --> 00:13:19,800
+I choose weight sex.
+
+301
+00:13:19,960 --> 00:13:22,655
+Now, I go back to
+
+302
+00:13:22,655 --> 00:13:26,435
+my x variable and you
+see what happens.
+
+303
+00:13:26,435 --> 00:13:28,730
+So it applies the weight
+
+304
+00:13:28,730 --> 00:13:30,335
+to my entire data set.
+
+305
+00:13:30,335 --> 00:13:32,989
+Now when I look at that
+specific variable,
+
+306
+00:13:32,989 --> 00:13:36,619
+I can CDs qual portion.
+
+307
+00:13:36,619 --> 00:13:38,645
+And then there's this way
+
+308
+00:13:38,645 --> 00:13:42,280
+toggle that is on,
+on my datasets.
+
+309
+00:13:42,280 --> 00:13:45,140
+So even I, if I
+close the dataset,
+
+310
+00:13:45,140 --> 00:13:48,185
+that way toggle remains on.
+
+311
+00:13:48,185 --> 00:13:49,790
+It's in opposite with
+
+312
+00:13:49,790 --> 00:13:51,890
+filter toggle
+cause for filter,
+
+313
+00:13:51,890 --> 00:13:54,500
+when you're, when
+you close a dataset,
+
+314
+00:13:54,500 --> 00:13:56,855
+it turns off automatically.
+
+315
+00:13:56,855 --> 00:13:58,220
+Next time you open it,
+
+316
+00:13:58,220 --> 00:13:59,045
+you want to make sure that
+
+317
+00:13:59,045 --> 00:14:00,140
+turns on the filter.
+
+318
+00:14:00,140 --> 00:14:03,770
+If you're planning to
+look at the filter,
+
+319
+00:14:03,770 --> 00:14:06,590
+DID about four
+weight, it remains.
+
+320
+00:14:06,590 --> 00:14:09,890
+And the reason is that
+if you use a weight,
+
+321
+00:14:09,890 --> 00:14:13,310
+especially when you
+technically for modeling
+
+322
+00:14:13,310 --> 00:14:17,555
+and you feed a modeling
+node with data set,
+
+323
+00:14:17,555 --> 00:14:19,835
+then that modelling
+nor knows that
+
+324
+00:14:19,835 --> 00:14:23,810
+this dataset is weighted
+and then use it.
+
+325
+00:14:23,810 --> 00:14:26,120
+So that's the whole point
+
+326
+00:14:26,120 --> 00:14:28,010
+of having this toggle.
+
+327
+00:14:28,010 --> 00:14:30,035
+So if you want to,
+if you turn it
+
+328
+00:14:30,035 --> 00:14:33,005
+on the modeling node,
+nodes automatically,
+
+329
+00:14:33,005 --> 00:14:35,180
+otherwise like even
+if you turn it off,
+
+330
+00:14:35,180 --> 00:14:37,490
+you can still go
+manually inside
+
+331
+00:14:37,490 --> 00:14:39,395
+the modern Romania Liao
+
+332
+00:14:39,395 --> 00:14:41,795
+and apply the
+weight valuable.
+
+333
+00:14:41,795 --> 00:14:45,290
+But this is just to
+show you how to create
+
+334
+00:14:45,290 --> 00:14:46,805
+weight variable using
+
+335
+00:14:46,805 --> 00:14:49,560
+variable transformation.

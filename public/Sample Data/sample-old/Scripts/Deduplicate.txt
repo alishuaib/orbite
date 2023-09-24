@@ -1,0 +1,49 @@
+DEDUPLICATE
+
+In this demonstration we will illustrate how to deduplicate or get rid of duplicate values.
+
+Let’s use the Base Demographics dataset, for this demonstration we will use our aggregate demo workflow.
+
+First, we need to remove duplicate rows.
+
+Drag a Deduplicate node onto the canvas.
+
+Connect the Base Demographics dataset.
+
+Double click to open the wizard.
+
+Give the target dataset an appropriate name and click run.
+
+Double click the output.
+
+Here, we can see that 194 duplicate rows were removed alongside the number of rows left.
+
+Lastly, we want to Join both, our transactional and demographic datasets into one complete dataset.
+
+Drag a Join node onto the canvas.
+
+Connect both output datasets from the Aggregate and Deduplicate nodes.
+
+Double click to open the wizard.
+
+Select the field to use to match records, in this case ID.
+
+Click next.
+
+Set an appropriate name for the new dataset.
+
+We will keep the default join method to include matching records only.
+
+Click next.
+
+Select the fields to include from the first dataset and click next.
+
+Select the fields to include from the second dataset and click next.
+
+Review the selected fields and click run.
+
+Double click on the output dataset.
+
+We can see that all 554 records from our transactional dataset were found in the demographics dataset.
+
+Viewing the data tab, we can also see that each customer ID is now associated with various demographic fields as well.

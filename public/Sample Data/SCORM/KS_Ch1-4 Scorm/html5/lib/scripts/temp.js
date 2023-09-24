@@ -1,0 +1,1 @@
+window.globalProvideData=function(t,e){var n=JSON.parse(e),i="slide"===t?n.id:t;f[i]=n},i}.call(n,r,n,t))||(t.exports=e)}).call(this,r(35)(t))}

@@ -1,0 +1,144 @@
+1
+00:00:00,000 --> 00:00:06,373
+In this demonstration we’ll be going over the Text Transform block found under the Data Preparation palette.
+
+2
+00:00:06,373 --> 00:00:11,885
+To begin, first drag the “transaction V2” excel file onto the canvas.
+
+3
+00:00:11,885 --> 00:00:15,621
+Configure the block then click apply and close.
+
+4
+00:00:15,621 --> 00:00:23,875
+Double clicking on the dataset, we can see the number of observations are 3386 and this dataset has 11 variables.
+
+5
+00:00:23,875 --> 00:00:32,130
+We will be transforming the category variable, going to the charts tab and selecting category we can see all the category values displayed.
+
+6
+00:00:32,130 --> 00:00:37,459
+Let’s head back to our workflow and drag a Text Transform block onto the canvas.
+
+7
+00:00:37,459 --> 00:00:42,083
+Connect the dataset and double click to open the configuration.
+
+8
+00:00:42,083 --> 00:00:45,374
+First, we need to add an operation.
+
+9
+00:00:45,374 --> 00:00:49,815
+In input variable select our target variable “Category”
+
+10
+00:00:49,815 --> 00:00:54,569
+And for Output variable input a name to be used for the new variable.
+
+11
+00:00:54,569 --> 00:01:01,257
+Under Operation input “backslash percentage” to use it as our selector and select Regular Expression.
+
+12
+00:01:01,257 --> 00:01:06,533
+Looking at the preview we can see some 1’s, indicating this operation is working.
+
+13
+00:01:06,533 --> 00:01:10,008
+Now let’s go ahead and remove these symbols.
+
+14
+00:01:10,008 --> 00:01:13,743
+Clicking on the plus sign we can add a new operation.
+
+15
+00:01:13,743 --> 00:01:21,371
+From input variable select Category once more but this time keep the Output variable Category as well so we can overwrite it.
+
+16
+00:01:21,371 --> 00:01:26,099
+Under Operation select Remove and select Pattern for Remove.
+
+17
+00:01:26,099 --> 00:01:29,861
+For find use the same expression as previously.
+
+18
+00:01:29,861 --> 00:01:34,119
+As we can see in the preview the percentage signs have been removed
+
+19
+00:01:34,119 --> 00:01:41,929
+One thing to note is that while it seems alright right now, the names still have a whitespace at the start, it’s only the preview not displaying it.
+
+20
+00:01:41,929 --> 00:01:45,194
+To fix this, add a new operation.
+
+21
+00:01:45,194 --> 00:01:49,296
+Again, select Category for input and output.
+
+22
+00:01:49,296 --> 00:01:54,128
+Under operation select remove and from this time select whitespace.
+
+23
+00:01:54,128 --> 00:01:59,692
+Select leading whitespace, this will ensure the variables have no space at the start
+
+24
+00:01:59,692 --> 00:02:09,201
+Now if we look at the chart again, we can see that some values have upper case letters while others have lower case letters. We want to standardize that.
+
+25
+00:02:09,201 --> 00:02:14,034
+To do so first add a new operation, select the same variable.
+
+26
+00:02:14,034 --> 00:02:22,680
+Under operation select Change Case and select lower case. As we can see in preview now every value is lower case.
+
+27
+00:02:22,680 --> 00:02:26,964
+Going back to the chart we can also see there are some spelling errors.
+
+28
+00:02:26,964 --> 00:02:31,927
+Let’s create a new operation and once more select the same variables.
+
+29
+00:02:31,927 --> 00:02:40,313
+For operation select Replace, for Find, enter the incorrectly spelled word and for Replace, enter the correctly spelled word, “lighting.”
+
+30
+00:02:40,313 --> 00:02:43,395
+As the preview shows it’s been fixed.
+
+31
+00:02:43,395 --> 00:02:50,527
+Going back to the dataset we can see there are some categories that are very similar to one another and can be grouped together.
+
+32
+00:02:50,527 --> 00:03:03,718
+Add a new operation, with same variables. Select replace once more but this time for Find. input “DIY” with an asterisk which indicates finding all values that start with DIY.
+
+33
+00:03:03,718 --> 00:03:08,891
+For replace input the name we want to group them under, in this case just DIY.
+
+34
+00:03:08,891 --> 00:03:11,895
+Let’s do the same for the word “bath”.
+
+35
+00:03:11,895 --> 00:03:24,642
+Now if we save our text transform block with Ctrl + S and head back to the workflow. We can see here it’s run successfully, double clicking the output dataset and going to charts then selecting category.
+
+36
+00:03:24,642 --> 00:03:29,762
+We can see there are a lot fewer categories thanks the transform operations.
+

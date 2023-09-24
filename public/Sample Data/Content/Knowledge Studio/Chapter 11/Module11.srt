@@ -1,0 +1,92 @@
+1
+00:00:00,000 --> 00:00:10,031
+In this demonstration, we will look at how a model created in Knowledge Studio can be deployed along with seeing how code nodes can be used to generate code.
+
+2
+00:00:10,031 --> 00:00:13,270
+To begin first create a new workflow
+
+3
+00:00:13,270 --> 00:00:17,528
+Link over the Validation dataset and Decision Tree model.
+
+4
+00:00:17,528 --> 00:00:23,327
+Drag a Scoring node found under the Action palette, onto the workflow canvas
+
+5
+00:00:23,327 --> 00:00:26,096
+Connect the model and dataset
+
+6
+00:00:26,096 --> 00:00:29,335
+Double click the node to open the wizard
+
+7
+00:00:29,335 --> 00:00:33,097
+Set an appropriate target name and click next
+
+8
+00:00:33,097 --> 00:00:40,098
+Make sure the fields between your validation dataset and model are correctly mapped, then click next.
+
+9
+00:00:40,098 --> 00:00:47,490
+Adjust the cutoff values as needed, in this case we will use 0.7 and 0.3.
+
+10
+00:00:47,490 --> 00:00:53,916
+Select which fields to include, we're only interested in Customer ID for this demo.
+
+11
+00:00:53,916 --> 00:00:56,946
+Click run to generate the output.
+
+12
+00:00:56,946 --> 00:01:00,786
+Double click the output dataset to view results.
+
+13
+00:01:00,786 --> 00:01:10,269
+The report gives an overview for the scored results indicating the number of records scored as Yes and No depending on the cutoff values we set earlier.
+
+14
+00:01:10,269 --> 00:01:16,355
+From the data tab we can see the actual scored probability for each Customer ID.
+
+15
+00:01:16,355 --> 00:01:21,292
+Heading back to the canvas, lets generate the model in SQL code.
+
+16
+00:01:21,292 --> 00:01:27,065
+Drag the generate code node onto the canvas also found under the Action palette
+
+17
+00:01:27,065 --> 00:01:29,025
+Connect the model
+
+18
+00:01:29,025 --> 00:01:31,846
+Double click to open the wizard.
+
+19
+00:01:31,846 --> 00:01:42,634
+Set a target name and select SQL from Code Type dropdown. Note that Knowledge Studio supports a wide array of languages to export models in.
+
+20
+00:01:42,634 --> 00:01:44,280
+Click run
+
+21
+00:01:44,280 --> 00:01:49,295
+Double click the node to view the generated code for this predictive model
+
+22
+00:01:49,295 --> 00:01:55,277
+This code can be copied and used in other environments supporting the selected language.
+
+23
+00:01:55,277 --> 00:02:01,860
+By utilizing these 2 main methods of deployment, models can be deployed and used with ease.
+

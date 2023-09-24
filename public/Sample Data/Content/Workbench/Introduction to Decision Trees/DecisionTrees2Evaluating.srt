@@ -1,0 +1,112 @@
+1
+00:00:00,000 --> 00:00:11,676
+This demonstration uses a model developed in a previous lesson. There are three variables in the model. capital_gain, relationship and education_num.
+
+2
+00:00:11,676 --> 00:00:17,502
+All leaf nodes, the point at which a prediction takes places, are of adequate size.
+
+3
+00:00:17,502 --> 00:00:23,327
+All being at least 4% of the dataset size and the widest split has 5 nodes.
+
+4
+00:00:23,327 --> 00:00:36,519
+There is the possibility to grow some segments further. However, as to whether there will be better isolation of the bad with an acceptable distribution is questionable, for example, consider leaf node number 7.
+
+5
+00:00:36,519 --> 00:00:51,121
+The node size is 13% of the overall dataset size with 1838 observations. Characteristics for membership of this node are missing capital_gain,  relationship  and education number greater than 7 and less than or = 9.
+
+6
+00:00:51,121 --> 00:01:09,459
+There are 533 bads, accounting for 29% of the node. Selecting this node and choosing Optimal Split by Entropy Variance splits on the variable occupation with 5 splits. As can be seen, most observations, 7% are concentrated in one node.
+
+7
+00:01:09,459 --> 00:01:18,941
+The generated split looks acceptable but with a variable such as occupation, which may have lots of categories, category merging may not be logical.
+
+8
+00:01:18,941 --> 00:01:25,211
+Validation will highlight whether this split is acceptable or not but for the time being it is retained.
+
+9
+00:01:25,211 --> 00:01:37,619
+There is a questionable segment, node number 3, as can be seen almost all observations in this node are bad, again, validation will lead to understanding whether it can be retained or must be merged with another node.
+
+10
+00:01:37,619 --> 00:01:47,911
+One final node to focus on is node number 5, this has 53% of observations and only 5% of these, 341 are in the bad category.
+
+11
+00:01:47,911 --> 00:02:01,181
+It would be great to split this further but given the small % of bad, additional splitting may provide no further benefit. To investigate, the node is selected and Optimal Split by Entropy Variance clicked.
+
+12
+00:02:01,181 --> 00:02:14,661
+The variable selected is education with 8 splits. The splits are further refined such that three are created that reflect an order. The resulting splits are acceptable with adequate distributions.
+
+13
+00:02:14,661 --> 00:02:24,195
+An attempt could be made to grow the tree further as some of the education_num splits are adequately sized with adequate distributions but here model building will stop at this point.
+
+14
+00:02:24,195 --> 00:02:33,573
+Onto validation. Notice the asterisk on the Decision Tree, clicking CTRL+S saves tree settings and the asterisk disappears.
+
+15
+00:02:33,573 --> 00:02:40,992
+Statistical and business validation can be assessed using the Analyse Models block, this is found in the Scoring group.
+
+16
+00:02:40,992 --> 00:02:50,866
+This block requires a scored dataset, so the first thing to do is score the development partition with the decision tree model using the Score block, also found in the Scoring group.
+
+17
+00:02:50,866 --> 00:03:00,636
+Notice the configuration status messages when the block is dragged onto the canvas: Block requires one dataset input and No input connection providing a model.
+
+18
+00:03:00,636 --> 00:03:06,801
+The development partition and model are both connected to the Score block and as a result of the block
+
+19
+00:03:06,801 --> 00:03:15,395
+being included in Auto-Run, a scored dataset is automatically output. Here, its name is changed to dev_scored.
+
+20
+00:03:15,395 --> 00:03:27,960
+Opening the scored dataset with the Data Profiler, it can be seen that two new columns have been added "P underscore bad and P underscore good, these variables contain the probability of bad and good for each scored observation.
+
+21
+00:03:27,960 --> 00:03:35,013
+Clicking the data tab and splitting the screen with the decision tree, it is easy to understand how scores were arrived at.
+
+22
+00:03:35,013 --> 00:03:42,092
+For example, the values for the first observation were generated as a result of it being a member of node 23.
+
+23
+00:03:42,092 --> 00:03:52,254
+This node contains 190 observations, so there will be another 189 observations with the same values as they are also contained in the same leaf node.
+
+24
+00:03:52,254 --> 00:04:00,117
+Notice that the tree has 19 leaf nodes, therefore there are 19 distinct P_Bad values and 19 distinct P_good values.
+
+25
+00:04:00,117 --> 00:04:15,033
+Now that the development partition is scored, the Analyze models block can be added to the Workflow and the scored development partition connected. The block configuration dialog contains two pages: Analysis Type and Variable Selection.
+
+26
+00:04:15,033 --> 00:04:27,624
+The Type of analysis drop-down provides two options: Classification and Regression. As the dependent variable in this instance is categorical, classification is appropriately selected.
+
+27
+00:04:27,624 --> 00:04:42,984
+The variable selection page allows selection of the variables to analyse in the connected dataset. Presently there is only one dataset connected. From the True class dropdown, the dependent variable is selected, here DV.
+
+28
+00:04:42,984 --> 00:05:02,393
+From the Truth category drop-down. The category of interest is selected, here, bad and from the Predicted probability drop-down the corresponding variable that contains the probability scores for the selected category chosen, here P_bad. Once complete, OK is clicked and the Analyse Models report accessed.
+

@@ -1,0 +1,104 @@
+Weight of Evidence
+
+In this demonstration we will be going over the Weight of Evidence node in Knowledge Studio.
+
+Weight of Evidence is used to apply variable transformations by assigning a single number for each category or bin within each dataset field based on predictive power.
+
+To begin first create a new workflow.
+
+Link the Census dataset.
+
+Drag the Weight of Evidence node to the workflow canvas.
+
+Connect the Census dataset.
+
+Note that Weight of Evidence transformations are usually applied to only the Training dataset instead of both training and validation.
+
+Double click to open the wizard.
+
+Set an appropriate name.
+
+Set the dependent variable to Response and target category to Yes.
+
+Select all fields except for Customer ID .
+
+For more advanced options, the attribute editor is also available.
+
+Click next.
+
+On this page you can modify optional optimization options used to generate decision trees .
+
+Tree Color tab allows you to customize the colors used to represent predictive values.
+
+Tree Configuration tab allows adjustments to the orientation and layout of the tree.
+
+Tree node tab is used to select information shown for each node.
+
+Tree growth lets you set stopping criteria.
+
+Split measure is used to set measure parameters used to build the tree.
+
+Tree training can be used to change the split search and measure.
+
+By default, Knowledge Studio uses optimal binning algorithms to bin numeric variables making it safe to continue without any changes.
+
+Click next.
+
+Now we can edit the bins manually and apply additional optimization options.
+
+In the top left, various buttons are available to navigate and edit splits.
+
+The decision tree view shows splits alongside weight of evidence values. By default these bins are generated through optimal binning algorithms mentioned earlier.
+
+Similarly, below this we have a histogram representation for each split showing the size of each bin.
+
+On the top right we have a line chart indicating percentage of Yes and No records along with weight of evidence values per bin.
+
+Directly below this we can see a tabular representation of each bin and various calculated statistics. The 2nd table shows entropy and information values for this variable.
+
+Lastly on the bottom right we have various options used to apply optimization techniques specifically to the current variable splits.
+
+As we edit the bins, we want to keep an eye out on tree splits, line chart and changes in entropy and information value.
+
+We can navigate between splits using Next and Previous split buttons.
+
+To go to a specific split, click Go to Split.
+
+By default, these splits are sorted from most to least information value.
+
+Let’s go to the last split.
+
+Since this variable is mainly for identification, we can use erase split to remove it. Generally, variables like this should be removed at the first page, alongside Customer ID.
+
+Next go to capital gain split.
+
+Under “Optimization” select Monotonic and set Enforce Equal size to 0.5
+
+Click apply.
+
+To remove an applied optimization click reset.
+
+Additionally, you can apply optimization to all splits by clicking Optimize All.
+
+Click Edit Split to open a range editor, allowing you to modify bins.
+
+Lastly to reset all changes made to every split, click Reset Bins.
+
+Once you’re happy with your bins click next.
+
+This helper page lets you adjust the field name extension for transformed variables.
+
+You can also choose to output a transformation report.
+
+Click next.
+
+Here you can review each Weight of Evidence variable along with your final Information Value. The expressions can be exported and used later when needed.
+
+After reviewing click Run to generate an output.
+
+Double click on the output
+
+We can see the new variables added to our Census dataset.
+
+Heading to data tab, we can also see that each variable’s values has been transformed to a Weight of Evidence value based on the splits we created earlier.
+
