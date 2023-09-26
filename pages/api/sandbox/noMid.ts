@@ -17,12 +17,12 @@ export const config = {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-	console.log(req)
+	console.log(req.query)
 	const form = await downloadForm(req)
 	console.log(form.fields)
 	res.status(200).json({
 		status: 200,
 		message: "success",
-		data: req.body,
+		data: form.fields,
 	})
 }

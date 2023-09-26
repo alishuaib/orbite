@@ -170,11 +170,11 @@ export async function insertItem(
 		_ids: string[]
 		documents: string[]
 		metas: {
-			_course: string
-			_section: string
-			_activity: string
-			_content: string // Content this slice of text belongs to
-			_sliceIdx: number // Index of slice in content
+			course_id: string
+			section_id: string
+			module_id: string
+			content_id: string // Content this slice of text belongs to
+			slice_index: number // Index of slice in content
 		}[]
 	}
 ) {

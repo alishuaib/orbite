@@ -61,6 +61,11 @@ model Auth {
   API_KEY String @unique
   key_expiry String?
 
+  courses Course[] @relation(name:"AuthCourses")
+  sections Section[] @relation(name:"AuthSections")
+  modules Module[] @relation(name:"AuthModules")
+  contents Content[] @relation(name:"AuthContents")
+
   @@index([org_id])
 }
 
@@ -83,8 +88,9 @@ model OrganizationConfig{
 //Orbite user data tables
 
 model Course{
-  id Int @id @default(autoincrement())
-  user_id Int
+  id Int @id 
+  auth_id Int
+  auth Auth @relation(name:"AuthCourses",fields: [auth_id], references: [id])
 
   title String
   label String? //Shortname/label for course
@@ -104,11 +110,15 @@ model Course{
 
   //Relations
   sections Section[] @relation("CourseSections")
+
+  @@index([auth_id])
 }
 
 model Section{
-  id Int @id @default(autoincrement())
-  user_id Int
+  id Int @id 
+  auth_id Int
+  auth Auth @relation(name:"AuthSections",fields: [auth_id], references: [id])
+
 
   parent Course @relation("CourseSections", fields: [course_id], references: [id])
   course_id Int
@@ -127,11 +137,13 @@ model Section{
   modules Module[] @relation("SectionModules")
   
   @@index([course_id])
+  @@index([auth_id])
 }
 
 model Module{
-  id Int @id @default(autoincrement())
-  user_id Int
+  id Int @id
+  auth_id Int
+  auth Auth @relation(name:"AuthModules",fields: [auth_id], references: [id])
   
   parent Section @relation("SectionModules", fields: [section_id], references: [id])
   section_id Int
@@ -150,20 +162,21 @@ model Module{
   contents Content[] @relation("ModuleContents")
 
   @@index([section_id])
+  @@index([auth_id])
 }
 
 model Content{
-  id Int @id @default(autoincrement())
-  user_id Int
+  id Int @id
+  auth_id Int
+  auth Auth @relation(name:"AuthContents",fields: [auth_id], references: [id])
   
   parent Module @relation("ModuleContents", fields: [module_id], references: [id])
   module_id Int
 
-  slice_ids String //List of slices for content
+  slice_ids String @db.LongText //List of slices for content
 
   name String
   ext String
-  dir String
   visible Boolean @default(true)
 
   size Int?
@@ -176,5 +189,6 @@ model Content{
   meta Json? //Meta data for content
 
   @@index([module_id])
+  @@index([auth_id])
 }
 
