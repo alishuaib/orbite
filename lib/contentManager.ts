@@ -2,11 +2,13 @@ import formidable from "formidable"
 import chalk from "chalk"
 import clientPromise from "@/lib/mongodb"
 import { createEmbedding, deleteEmbedding } from "@/lib/embedding"
-
+import prisma from "@/lib/prisma-client"
+import { Authorization } from "@/lib/middleware/checkAuth"
 //Types
 import { NextApiRequest, NextApiResponse } from "next/types"
 import { Auth, Course, Section, Activity, Content } from "@/lib/@schemas"
 import { Collection, ObjectId } from "mongodb"
+import content from "@/pages/api/v1/content"
 
 interface FormidableResult {
 	err: any | null
@@ -62,10 +64,10 @@ export async function downloadForm(request: NextApiRequest) {
 
 function validateForm(
 	data: FormidableResult,
-	require: Array<"course" | "section" | "activity" | "content"> = ["content"]
+	require: Array<"course" | "section" | "module" | "content"> = ["content"]
 ) {
 	const { fields, files } = data
-
+	console.log(fields, files)
 	if (!files.file) {
 		throw new ContentManagerError(`Form-data is missing file data`)
 	}
@@ -79,7 +81,7 @@ function validateForm(
 	}
 
 	const parse = JSON.parse(fields.body as string)
-
+	console.log(parse)
 	if (!require.every((value) => Object.keys(parse).includes(value))) {
 		throw new ContentManagerError(
 			`Form-data is missing ${require.filter(
@@ -89,10 +91,10 @@ function validateForm(
 	}
 
 	const body = {
-		course: parse.course as Course,
-		section: parse.section as Section,
-		activity: parse.activity as Activity,
-		content: parse.content as Content[],
+		course: parse.course,
+		section: parse.section,
+		module: parse.module,
+		content: parse.content as any[],
 	}
 
 	return {
@@ -143,7 +145,7 @@ function validateForm(
 export async function createContent(
 	request: NextApiRequest,
 	response: NextApiResponse,
-	auth: Auth,
+	auth: Authorization,
 	form: FormidableResult,
 	update?: boolean
 ) {
@@ -152,40 +154,30 @@ export async function createContent(
 		const { body, files } = validateForm(form, [
 			"course",
 			"section",
-			"activity",
+			"module",
 			"content",
 		])
 		console.log(
 			`${chalk.magenta("[Debugging]")} :: Finished Validating form-data`
 		)
-		//Load course, section and activity database
-		const client = await clientPromise
-		const db = {
-			course: client
-				.db(auth._handle)
-				?.collection("course") as Collection<Course>,
-			section: client
-				.db(auth._handle)
-				?.collection("section") as Collection<Section>,
-			activity: client
-				.db(auth._handle)
-				?.collection("activity") as Collection<Activity>,
-			content: client
-				.db(auth._handle)
-				?.collection("content") as Collection<Content>,
-		}
 
 		//Parse text and generate embeddings
+
 		const embedding = await createEmbedding(
-			auth._handle,
+			auth.handle,
+			{
+				course_id: body.course.id,
+				section_id: body.section.id,
+				module_id: body.module.id,
+			},
 			body.content,
 			files
 		)
 		if (!embedding)
 			throw new ContentManagerError(`Unable to generate embeddings`)
 		embedding.forEach((ids, idx) => {
-			if (ids) body.content[idx]._slices = ids
-			console.log(body.content[idx]._slices)
+			if (ids) body.content[idx].slice_ids = ids.join(",")
+			console.log(body.content[idx].slice_ids)
 		})
 		console.log(
 			`${chalk.magenta(
@@ -200,9 +192,7 @@ export async function createContent(
 					"[Debugging]"
 				)} :: Deleting old documents and vectors`
 			)
-			const hack = {
-				content: body.content,
-			}
+			const hack = body.content.map((c) => c.id)
 
 			try {
 				await deleteContent(request, response, auth, hack, true)
@@ -216,33 +206,87 @@ export async function createContent(
 			)
 		}
 
-		//Store new file into database
-		await db.content.insertMany(body.content)
-		console.log(
-			`${chalk.magenta("[Debugging]")} :: Finished adding file document`
-		)
+		//Prisma record writing
 
-		//Check if course, section and activity exists, if not create them
-		if (
-			!(await db.course.findOne({
-				_id: body.course._id,
-			}))
-		)
-			await db.course.insertOne(body.course)
+		//Find or create course if it doesn't exist
+		const course = await prisma.course.upsert({
+			where: {
+				id: body.course.id,
+			},
+			update: {},
+			create: {
+				...body.course,
+				auth: {
+					connect: {
+						id: auth.id,
+					},
+				},
+			},
+		})
 
-		if (
-			!(await db.section.findOne({
-				_id: body.section._id,
-			}))
-		)
-			await db.section.insertOne(body.section)
+		//Add a new related section if it doesn't exist
+		const section = await prisma.section.upsert({
+			where: {
+				id: body.section.id,
+			},
+			update: {},
+			create: {
+				...body.section,
+				auth: {
+					connect: {
+						id: auth.id,
+					},
+				},
+				parent: {
+					connect: {
+						id: course.id,
+					},
+				},
+			},
+		})
 
-		if (
-			!(await db.activity.findOne({
-				_id: body.activity._id,
-			}))
-		)
-			await db.activity.insertOne(body.activity)
+		//Add a new related module if it doesn't exist
+		await prisma.module.upsert({
+			where: {
+				id: body.module.id,
+			},
+			update: {},
+			create: {
+				...body.module,
+				auth: {
+					connect: {
+						id: auth.id,
+					},
+				},
+				parent: {
+					connect: {
+						id: section.id,
+					},
+				},
+			},
+		})
+
+		//Add newly created content to corresponding module
+		await prisma.module.update({
+			where: {
+				id: body.module.id,
+			},
+			data: {
+				contents: {
+					createMany: {
+						data: body.content.map((content) => {
+							return {
+								...content,
+								auth_id: auth.id, //Cant use connect syntax with createMany
+							}
+						}),
+					},
+				},
+			},
+			include: {
+				contents: true,
+			},
+		})
 
 		console.log(
 			`${chalk.magenta(
@@ -256,9 +300,9 @@ export async function createContent(
 			isSuccess: false,
 			message: "Files uploaded successfully",
 			data: {
-				handle: auth._handle,
+				handle: auth.handle,
 				files: files.length,
-				vectors: [], //TODO: Array of vector/slices counts per file
+				vectors: body.content.map((c: any) => c.id), //TODO: Array of vector/slices counts per file
 				tokens: [], //TODO: Array of total token usage per file
 			},
 		})
@@ -266,7 +310,7 @@ export async function createContent(
 		console.error(error)
 		response.status(500).json({
 			route: request.url,
-			isSuccess: true,
+			isSuccess: false,
 			message: error instanceof Error ? error.message : "",
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
@@ -276,45 +320,35 @@ export async function createContent(
 export async function deleteContent(
 	request: NextApiRequest,
 	response: NextApiResponse,
-	auth: Auth,
-	body: { content: Content[] },
+	auth: Authorization,
+	content_ids: number[],
 	update?: boolean
 ) {
-	console.log(body)
+	console.log(content_ids)
 	try {
-		if (!body.content) {
+		if (!content_ids) {
 			throw new ContentManagerError(`Missing content data in body`)
 		}
 
-		if (!Array.isArray(body.content)) {
+		if (!Array.isArray(content_ids)) {
 			throw new ContentManagerError(`body.content is not an array`)
 		}
 
-		//Connect the dbs
-		const client = await clientPromise
-		const db = {
-			course: client
-				.db(auth._handle)
-				?.collection("course") as Collection<Course>,
-			section: client
-				.db(auth._handle)
-				?.collection("section") as Collection<Section>,
-			activity: client
-				.db(auth._handle)
-				?.collection("activity") as Collection<Activity>,
-			content: client
-				.db(auth._handle)
-				.collection("content") as Collection<Content>,
-		}
-
 		//Find the documents
-		const ids = body.content.map((i: Content) => i._id)
-		const contents = await db.content.find({ _id: { $in: ids } }).toArray()
+		const ids = content_ids
+		const contents = await prisma.content.findMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		})
+
 		if (contents.length == 0) {
 			throw new ContentManagerError(`Unable to find content`, null, ids)
 		}
 
-		const slices = contents.map((i: Content) => i._slices)
+		const slices = contents.map((i) => i.slice_ids.split(","))
 
 		for (let idx = 0; idx < slices.length; idx++) {
 			const _slices = slices[idx]
@@ -325,7 +359,7 @@ export async function deleteContent(
 					"[Debugging]"
 				)} :: Deleting embedding for file ${idx}`
 			)
-			const success = await deleteEmbedding(auth._handle, _slices)
+			const success = await deleteEmbedding(auth.handle, _slices)
 			console.log(success)
 			if (!success) {
 				throw new ContentManagerError(
@@ -347,60 +381,51 @@ export async function deleteContent(
 					}
 				)
 			}
-
-			//Delete documents from db
-			console.log(
-				`${chalk.magenta(
-					"[Debugging]"
-				)} :: Deleting documents for file ${idx}`
-			)
-			const result = await db.content.deleteMany({
-				_id: { $in: ids },
-			})
-			if (!result) {
-				throw new ContentManagerError(
-					`Unable to delete content`,
-					null,
-					ids
-				)
-			}
+		}
+		//Delete documents from db
+		console.log(
+			`${chalk.magenta(
+				"[Debugging]"
+			)} :: Deleting documents for files ${ids}`
+		)
+		const result = await prisma.content.deleteMany({
+			where: {
+				id: {
+					in: ids,
+				},
+			},
+		})
+		if (!result) {
+			throw new ContentManagerError(`Unable to delete content`, null, ids)
 		}
 
 		//Check if course,section,activity is empty and delete if so
 		console.log(
 			`${chalk.magenta(
 				"[Debugging]"
-			)} :: Checking if remaining course, section, activity is empty`
+			)} :: Cleaning up empty courses, sections and modules`
 		)
-		for (let i = 0; i < body.content.length; i++) {
-			const content = body.content[i] as Content
-			if (
-				!(await db.content.findOne({
-					_id: content._course,
-				}))
-			)
-				await db.course.deleteOne({
-					_id: content._course,
-				})
-
-			if (
-				!(await db.content.findOne({
-					_id: content._section,
-				}))
-			)
-				await db.section.deleteOne({
-					_id: content._section,
-				})
-
-			if (
-				!(await db.content.findOne({
-					_id: content._activity,
-				}))
-			)
-				await db.activity.deleteOne({
-					_id: content._activity,
-				})
-		}
+		await prisma.module.deleteMany({
+			where: {
+				contents: {
+					none: {},
+				},
+			},
+		})
+		await prisma.section.deleteMany({
+			where: {
+				modules: {
+					none: {},
+				},
+			},
+		})
+		await prisma.course.deleteMany({
+			where: {
+				sections: {
+					none: {},
+				},
+			},
+		})
 
 		console.log(
 			`${chalk.magenta(
@@ -414,7 +439,7 @@ export async function deleteContent(
 			isSuccess: true,
 			message: "Content deleted successfully",
 			data: {
-				handle: auth._handle,
+				handle: auth.handle,
 				_id: ids,
 			},
 		})

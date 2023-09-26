@@ -34,8 +34,13 @@ export async function middleware(d: Content, f: formidable.File) {
 }
 
 export async function createEmbedding(
-	_handle: string,
-	docs: Content[],
+	handle: string,
+	ids: {
+		course_id: string
+		section_id: string
+		module_id: string
+	},
+	docs: any[],
 	files: formidable.File[]
 ) {
 	const file_entries = []
@@ -51,11 +56,11 @@ export async function createEmbedding(
 					id: v4(),
 					documents: d[i],
 					metas: {
-						_course: f._course,
-						_section: f._section,
-						_activity: f._activity,
-						_content: f._id.toString(),
-						_sliceIdx: i,
+						course_id: ids.course_id,
+						section_id: ids.section_id,
+						module_id: ids.module_id,
+						content_id: f.id.toString(),
+						slice_index: i,
 					},
 				})
 			}
@@ -67,7 +72,7 @@ export async function createEmbedding(
 
 	for (let idx = 0; idx < file_entries.length; idx++) {
 		const props = file_entries[idx]
-		const results = await insertItem(_handle, "Content", {
+		const results = await insertItem(handle, "Content", {
 			_ids: props.map((i) => i.id),
 			documents: props.map((i) => i.documents),
 			metas: props.map((i) => i.metas),

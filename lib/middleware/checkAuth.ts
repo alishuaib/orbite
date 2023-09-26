@@ -21,6 +21,7 @@ const authTyping = Prisma.validator<Prisma.AuthDefaultArgs>()({
 })
 
 type Authorization = Prisma.AuthGetPayload<typeof authTyping>
+export type { Authorization }
 
 export default function withApiKeyVerification(
 	handler: (
@@ -37,6 +38,7 @@ export default function withApiKeyVerification(
 				.json({ success: false, message: "API_KEY is missing" })
 		}
 		const authorization = await verifyApiKeyPrisma(apiKey)
+
 		if (!authorization) {
 			return res
 				.status(401)

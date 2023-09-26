@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types"
-import withApiKeyVerification from "@/lib/middleware/apikey"
+import withApiKeyVerification, {
+	Authorization,
+} from "@/lib/middleware/checkAuth"
 import { Auth } from "@/lib/@schemas"
 
 import {
@@ -27,7 +29,7 @@ interface FormidableResult {
 // Get all courses for a given organization based on their assigned handle
 //
 export default withApiKeyVerification(
-	async (req: NextApiRequest, res: NextApiResponse, auth: Auth) => {
+	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
 		const { body, query } = req
 
 		let response: any
@@ -110,7 +112,7 @@ export default withApiKeyVerification(
 				break
 			case "query":
 				response = await weaviate.generativeResponse(
-					auth._handle,
+					auth.handle,
 					"Content",
 					req.body._course,
 					req.body.query
