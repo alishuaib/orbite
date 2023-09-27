@@ -20,7 +20,7 @@ export default withApiKeyVerification(
 				data: null,
 			})
 		}
-		switch (query.method) {
+		switch ((query.method as string).toUpperCase()) {
 			case "GET":
 				await GET(req, res, auth)
 				break
@@ -192,6 +192,7 @@ async function PATCH(
 		const body = validatePATCH(req.body)
 		let update = await prisma.course.update({
 			where: {
+				auth_id: auth.id,
 				id: body.course.id,
 			},
 			data: {
@@ -236,6 +237,7 @@ async function DELETE(
 		const body = validateDELETE(req.body)
 		let del = await prisma.course.deleteMany({
 			where: {
+				auth_id: auth.id,
 				id: {
 					in: body.course.id,
 				},
