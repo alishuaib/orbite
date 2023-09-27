@@ -47,6 +47,10 @@ export default withApiKeyVerification(
 				form = await downloadForm(req)
 				await createContent(req, res, auth, form)
 				break
+			case "PATCH":
+				form = await downloadForm(req)
+				await createContent(req, res, auth, form, true)
+				break
 			case "DELETE":
 				// form = await downloadForm(req)
 				await deleteContent(req, res, auth, content_ids)
