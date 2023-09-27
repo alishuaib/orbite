@@ -1,23 +1,17 @@
 import { PrismaClient } from "@prisma/client"
 
-let prisma: PrismaClient
-
-declare global {
-	var _prismaClientPromise: PrismaClient
+const prismaClientSingleton = () => {
+	return new PrismaClient()
 }
 
-if (process.env.NODE_ENV === "development") {
-	// In development mode, use a global variable so that the value
-	// is preserved across module reloads caused by HMR (Hot Module Replacement).
-	if (!globalThis._prismaClientPromise) {
-		globalThis._prismaClientPromise = new PrismaClient()
-	}
-	prisma = globalThis._prismaClientPromise
-} else {
-	// In production mode, it's best to not use a global variable.
-	prisma = new PrismaClient()
+type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>
+
+const globalForPrisma = globalThis as unknown as {
+	prisma: PrismaClientSingleton | undefined
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton()
+
 export default prisma
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma

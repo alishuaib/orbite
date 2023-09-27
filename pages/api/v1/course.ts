@@ -2,8 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next/types"
 import withApiKeyVerification, {
 	Authorization,
 } from "@/lib/middleware/checkAuth"
-import { Prisma, PrismaClient } from "@prisma/client"
-let prisma = new PrismaClient()
+import prisma from "@/lib/prisma-client"
 import { z } from "zod"
 
 //
@@ -11,10 +10,17 @@ import { z } from "zod"
 //
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
-		console.log("running course", req.method)
-		const { method } = req
-
-		switch (method) {
+		console.log("running course", req.query.method)
+		const { query } = req
+		if (query.method == undefined || req.method != "POST") {
+			res.status(400).json({
+				route: `${req.url}`,
+				isSuccess: false,
+				message: "No method provided in query",
+				data: null,
+			})
+		}
+		switch (query.method) {
 			case "GET":
 				await GET(req, res, auth)
 				break
@@ -28,7 +34,6 @@ export default withApiKeyVerification(
 				await DELETE(req, res, auth)
 				break
 		}
-		await prisma.$disconnect()
 	}
 )
 
@@ -46,6 +51,7 @@ async function GET(
 		try {
 			return schema.parse(body)
 		} catch (error) {
+			console.log(error)
 			throw new Error(`Invalid course object for GET: ${error}`)
 		}
 	}
@@ -76,15 +82,18 @@ async function GET(
 				},
 			},
 		})
+		if (find.length == 0) {
+			throw new Error(`No courses found with ids: ${body.course.id}`)
+		}
 		res.status(200).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
 			message: "Course(s) found successfully",
 			data: find,
 		})
 	} catch (error: any) {
 		return res.status(400).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -98,6 +107,7 @@ async function POST(
 	auth: Authorization
 ) {
 	function validatePOST(body: any) {
+		console.log(body)
 		let schema = z.object({
 			course: z.object({
 				id: z.number(),
@@ -117,7 +127,8 @@ async function POST(
 		try {
 			return schema.parse(body)
 		} catch (error) {
-			throw new Error(`Invalid course object for DELETE: ${error}`)
+			console.log(error)
+			throw new Error(`Invalid course object for POST: ${error}`)
 		}
 	}
 	try {
@@ -133,14 +144,14 @@ async function POST(
 			},
 		})
 		res.status(200).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
 			message: "Courses created successfully",
 			data: create,
 		})
 	} catch (error: any) {
 		return res.status(400).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -173,7 +184,8 @@ async function PATCH(
 		try {
 			return schema.parse(body)
 		} catch (error) {
-			throw new Error(`Invalid course object for DELETE: ${error}`)
+			console.log(error)
+			throw new Error(`Invalid course object for PATCH: ${error}`)
 		}
 	}
 	try {
@@ -187,14 +199,14 @@ async function PATCH(
 			},
 		})
 		res.status(200).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
 			message: "Courses updated successfully",
 			data: update,
 		})
 	} catch (error: any) {
 		return res.status(400).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -216,6 +228,7 @@ async function DELETE(
 		try {
 			return schema.parse(body)
 		} catch (error) {
+			console.log(error)
 			throw new Error(`Invalid course object for DELETE: ${error}`)
 		}
 	}
@@ -228,15 +241,18 @@ async function DELETE(
 				},
 			},
 		})
+		if (del.count == 0) {
+			throw new Error(`No courses found with ids: ${body.course.id}`)
+		}
 		res.status(200).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
 			message: "Courses deleted successfully",
 			data: del,
 		})
 	} catch (error: any) {
 		return res.status(400).json({
-			route: `${req.method}::${req.url}`,
+			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
