@@ -2,7 +2,10 @@ import formidable from "formidable"
 import chalk from "chalk"
 import clientPromise from "@/lib/mongodb"
 import { createEmbedding, deleteEmbedding } from "@/lib/embedding"
-import prisma from "@/lib/prisma-client"
+
+import { PrismaClient } from "@prisma/client"
+let prisma = new PrismaClient()
+
 import { Authorization } from "@/lib/middleware/checkAuth"
 //Types
 import { NextApiRequest, NextApiResponse } from "next/types"
@@ -149,6 +152,7 @@ export async function createContent(
 	form: FormidableResult,
 	update?: boolean
 ) {
+	await prisma.$connect()
 	try {
 		//Validate form-data
 		const { body, files } = validateForm(form, [
@@ -297,7 +301,7 @@ export async function createContent(
 		//Return response
 		return response.status(200).json({
 			route: request.url,
-			isSuccess: false,
+			isSuccess: true,
 			message: "Files uploaded successfully",
 			data: {
 				handle: auth.handle,
@@ -315,6 +319,7 @@ export async function createContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
+	await prisma.$disconnect()
 }
 
 export async function deleteContent(
@@ -324,6 +329,7 @@ export async function deleteContent(
 	content_ids: number[],
 	update?: boolean
 ) {
+	await prisma.$connect()
 	console.log(content_ids)
 	try {
 		if (!content_ids) {
@@ -338,6 +344,7 @@ export async function deleteContent(
 		const ids = content_ids
 		const contents = await prisma.content.findMany({
 			where: {
+				auth_id: auth.id,
 				id: {
 					in: ids,
 				},
@@ -390,6 +397,7 @@ export async function deleteContent(
 		)
 		const result = await prisma.content.deleteMany({
 			where: {
+				auth_id: auth.id,
 				id: {
 					in: ids,
 				},
@@ -407,6 +415,7 @@ export async function deleteContent(
 		)
 		await prisma.module.deleteMany({
 			where: {
+				auth_id: auth.id,
 				contents: {
 					none: {},
 				},
@@ -414,6 +423,7 @@ export async function deleteContent(
 		})
 		await prisma.section.deleteMany({
 			where: {
+				auth_id: auth.id,
 				modules: {
 					none: {},
 				},
@@ -421,6 +431,7 @@ export async function deleteContent(
 		})
 		await prisma.course.deleteMany({
 			where: {
+				auth_id: auth.id,
 				sections: {
 					none: {},
 				},
@@ -452,4 +463,43 @@ export async function deleteContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
+	if (!update) await prisma.$disconnect()
+}
+
+export async function getContent(
+	request: NextApiRequest,
+	response: NextApiResponse,
+	auth: Authorization,
+	content_ids?: number[]
+) {
+	await prisma.$connect()
+	try {
+		console.log(content_ids)
+		const content = await prisma.content.findMany({
+			where: {
+				auth_id: auth.id,
+				id: {
+					in:
+						content_ids && content_ids.length > 0
+							? content_ids
+							: undefined,
+				},
+			},
+		})
+		return response.status(200).json({
+			route: request.url,
+			isSuccess: true,
+			message: "Content found successfully",
+			data: content,
+		})
+	} catch (error) {
+		console.error(error)
+		response.status(500).json({
+			route: request.url,
+			isSuccess: true,
+			message: error instanceof Error ? error.message : "",
+			data: error instanceof ContentManagerError ? error.data : {},
+		})
+	}
+	await prisma.$disconnect()
 }
