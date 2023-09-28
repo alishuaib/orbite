@@ -10,7 +10,6 @@ import { z } from "zod"
 //
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
-		console.log("running course", req.query.method)
 		const { query } = req
 		if (query.method == undefined || req.method != "POST") {
 			res.status(400).json({
