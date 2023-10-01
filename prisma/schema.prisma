@@ -181,7 +181,7 @@ model Content{
 
   size Int?
   mimetype String?
-  modified_at DateTime?
+  modified_at String? //UTC timestamp of last modified date
 
   url String? //URL to content homepage
 

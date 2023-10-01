@@ -18,8 +18,10 @@ import {
 
 import formidable from "formidable"
 import { v4 } from "uuid"
+import { ContentBodyType } from "./contentManager"
 
-export async function middleware(d: Content, f: formidable.File) {
+type ContentDocsArray = ContentBodyType["fields"]["body"]["content"]
+export async function middleware(d: ContentDocsArray[0], f: formidable.File) {
 	//TODO: Improve tokenizer slicing to better to handle large files
 	const parsed = await parseFile(f)
 	if (parsed) {
@@ -33,14 +35,43 @@ export async function middleware(d: Content, f: formidable.File) {
 	return null
 }
 
+export async function insertEmbedding(
+	handle: string,
+	file_entries: {
+		id: string
+		documents: string
+		metas: {
+			course_id: number
+			section_id: number
+			module_id: number
+			content_id: number
+			slice_index: number
+		}
+	}[][]
+) {
+	const response = []
+
+	for (let idx = 0; idx < file_entries.length; idx++) {
+		const props = file_entries[idx]
+		const results = await insertItem(handle, "Content", {
+			_ids: props.map((i) => i.id),
+			documents: props.map((i) => i.documents),
+			metas: props.map((i) => i.metas),
+		})
+		response.push(results)
+	}
+
+	return response
+}
+
 export async function createEmbedding(
 	handle: string,
 	ids: {
-		course_id: string
-		section_id: string
-		module_id: string
+		course_id: number
+		section_id: number
+		module_id: number
 	},
-	docs: any[],
+	docs: ContentDocsArray,
 	files: formidable.File[]
 ) {
 	const file_entries = []
@@ -59,7 +90,7 @@ export async function createEmbedding(
 						course_id: ids.course_id,
 						section_id: ids.section_id,
 						module_id: ids.module_id,
-						content_id: f.id.toString(),
+						content_id: f.id,
 						slice_index: i,
 					},
 				})
@@ -68,19 +99,7 @@ export async function createEmbedding(
 		}
 	}
 
-	const response = []
-
-	for (let idx = 0; idx < file_entries.length; idx++) {
-		const props = file_entries[idx]
-		const results = await insertItem(handle, "Content", {
-			_ids: props.map((i) => i.id),
-			documents: props.map((i) => i.documents),
-			metas: props.map((i) => i.metas),
-		})
-		response.push(results)
-	}
-
-	return response
+	return file_entries
 }
 
 // export type SearchResponse = {
@@ -119,15 +138,8 @@ export async function searchEmbedding(
 	// }
 }
 
-export async function deleteEmbedding(_handle: string, _ids: string[]) {
-	const results: string[] = []
-
-	for (let i = 0; i < _ids.length; i++) {
-		const id = _ids[i]
-		const res = await deleteItem(_handle, "Content", id)
-		if (res) results.push(res)
-	}
-
+export async function deleteEmbedding(_handle: string, content_id: number) {
+	const results = await deleteItem(_handle, "Content", content_id)
 	return results
 }
 

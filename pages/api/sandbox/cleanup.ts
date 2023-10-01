@@ -11,5 +11,8 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
 				.status(200)
 				.json({ message: "All Content data has been erased" })
 			break
+		default:
+			response.status(400).send("Only DELETE supported")
+			break
 	}
 }

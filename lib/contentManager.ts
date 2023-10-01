@@ -1,17 +1,79 @@
 import formidable from "formidable"
 import chalk from "chalk"
-import clientPromise from "@/lib/mongodb"
-import { createEmbedding, deleteEmbedding } from "@/lib/embedding"
-
-import { PrismaClient } from "@prisma/client"
-let prisma = new PrismaClient()
-
-import { Authorization } from "@/lib/middleware/checkAuth"
+//DB
+import {
+	createEmbedding,
+	deleteEmbedding,
+	insertEmbedding,
+} from "@/lib/embedding"
+import prisma from "@/lib/prisma-client"
 //Types
+import { z } from "zod"
+import { Authorization } from "@/lib/middleware/checkAuth"
 import { NextApiRequest, NextApiResponse } from "next/types"
-import { Auth, Course, Section, Activity, Content } from "@/lib/@schemas"
-import { Collection, ObjectId } from "mongodb"
-import content from "@/pages/api/v1/content"
+
+const schema = z.object({
+	fields: z.object({
+		body: z.object({
+			course: z.object({
+				id: z.number(),
+				title: z.string(),
+				label: z.string().optional(),
+				summary: z.string().optional(),
+				icon: z.string().optional(),
+				visible: z.boolean(),
+				url: z.string().optional(),
+				namespace: z.string().optional(),
+				category: z.string().optional(),
+				tags: z.string().optional(),
+				version: z.string(),
+				meta: z.record(z.any()).optional(),
+			}),
+			section: z.object({
+				id: z.number(),
+				title: z.string(),
+				summary: z.string().optional(),
+				order: z.string(),
+				visible: z.boolean(),
+				url: z.string().optional(),
+				version: z.string(),
+				meta: z.record(z.any()).optional(),
+			}),
+			module: z.object({
+				id: z.number(),
+				title: z.string(),
+				summary: z.string().optional(),
+				order: z.string(),
+				visible: z.boolean(),
+				url: z.string().optional(),
+				version: z.string(),
+				meta: z.record(z.any()).optional(),
+			}),
+			content: z.array(
+				z.object({
+					id: z.number(),
+					name: z.string(),
+					ext: z.string(),
+					visible: z.boolean(),
+					size: z.number().optional(),
+					mimetype: z.string().optional(),
+					modified_at: z.string().optional(),
+					url: z.string().optional(),
+					version: z.string(),
+					meta: z.record(z.any()).optional(),
+
+					//Undefined by default
+					slice_ids: z.string().optional(),
+				})
+			),
+		}),
+	}),
+	files: z.object({ file: z.array(z.any()).min(1) }),
+	err: z.any().optional(),
+})
+
+export { schema as ContentBodySchema }
+export type ContentBodyType = z.TypeOf<typeof schema>
 
 interface FormidableResult {
 	err: any | null
@@ -65,77 +127,6 @@ export async function downloadForm(request: NextApiRequest) {
 	return data
 }
 
-function validateForm(
-	data: FormidableResult,
-	require: Array<"course" | "section" | "module" | "content"> = ["content"]
-) {
-	const { fields, files } = data
-	console.log(fields, files)
-	if (!files.file) {
-		throw new ContentManagerError(`Form-data is missing file data`)
-	}
-
-	//TODO :: Check file type is valid and supported
-	//TODO :: Security check for zip file contents
-	//TODO :: Security check for malicious files
-
-	if (!fields.body) {
-		throw new ContentManagerError(`Form-data is missing body data`)
-	}
-
-	const parse = JSON.parse(fields.body as string)
-	console.log(parse)
-	if (!require.every((value) => Object.keys(parse).includes(value))) {
-		throw new ContentManagerError(
-			`Form-data is missing ${require.filter(
-				(i) => !Object.keys(fields).includes(i)
-			)} fields`
-		)
-	}
-
-	const body = {
-		course: parse.course,
-		section: parse.section,
-		module: parse.module,
-		content: parse.content as any[],
-	}
-
-	return {
-		body: body,
-		files: Object.values(files).flat() as formidable.File[],
-	}
-}
-
-/*
-	Expected structure of form-data sent with the request
-
-	fields ::
-		body {
-			course?
-			section?
-			activity?
-			file
-		}
-	files ::
-		[]?
-
-	- body is expected to be a json string
-	- each key in body is expected to follow the db schema (aka pre cleaned)
-	- files is expected to be an array of files
-
-	create 
-		file should be included
-		course, section, activity should be included
-
-	update
-		file should be included
-		course, section, activity should be included
-
-	delete
-		json request not a form-data request
-		only contains file
-**/
-
 /**
  * Creates content using the provided form data and authenticated credentials.
  * @async
@@ -149,25 +140,26 @@ export async function createContent(
 	request: NextApiRequest,
 	response: NextApiResponse,
 	auth: Authorization,
-	form: FormidableResult,
+	form: ContentBodyType,
 	update?: boolean
 ) {
-	await prisma.$connect()
 	try {
 		//Validate form-data
-		const { body, files } = validateForm(form, [
-			"course",
-			"section",
-			"module",
-			"content",
-		])
+		// const { body, files } = validateForm(form, [
+		// 	"course",
+		// 	"section",
+		// 	"module",
+		// 	"content",
+		// ])
+		const body = form.fields.body
+		const files = form.files.file
 		console.log(
 			`${chalk.magenta("[Debugging]")} :: Finished Validating form-data`
 		)
 
 		//Parse text and generate embeddings
-
-		const embedding = await createEmbedding(
+		console.log(`${chalk.magenta("[Debugging]")} :: Parsing uploaded files`)
+		const parsed_files = await createEmbedding(
 			auth.handle,
 			{
 				course_id: body.course.id,
@@ -177,16 +169,12 @@ export async function createContent(
 			body.content,
 			files
 		)
-		if (!embedding)
-			throw new ContentManagerError(`Unable to generate embeddings`)
-		embedding.forEach((ids, idx) => {
-			if (ids) body.content[idx].slice_ids = ids.join(",")
-			console.log(body.content[idx].slice_ids)
-		})
+		if (!parsed_files)
+			throw new ContentManagerError(`Unable to parse file for embeddings`)
 		console.log(
 			`${chalk.magenta(
 				"[Debugging]"
-			)} :: Finished generating embeddings \n\t${embedding}`
+			)} :: Finished parsing file for embeddings \n\t${parsed_files}`
 		)
 
 		// If update remove old documents and vectors
@@ -210,6 +198,26 @@ export async function createContent(
 			)
 		}
 
+		//Generate and insert embeddings
+		console.log(
+			`${chalk.magenta(
+				"[Debugging]"
+			)} :: Creating and inserting embeddings`
+		)
+		const embedding = await insertEmbedding(auth.handle, parsed_files)
+		embedding.forEach((ids, idx) => {
+			if (ids) body.content[idx].slice_ids = ids.join(",")
+			console.log(body.content[idx].slice_ids)
+		})
+		if (!parsed_files)
+			throw new ContentManagerError(
+				`Unable to create and insert embeddings`
+			)
+		console.log(
+			`${chalk.magenta(
+				"[Debugging]"
+			)} :: Finished creating and inserting embeddings \n\t${embedding}`
+		)
 		//Prisma record writing
 
 		//Find or create course if it doesn't exist
@@ -271,6 +279,13 @@ export async function createContent(
 		})
 
 		//Add newly created content to corresponding module
+		body.content.forEach((content) => {
+			if (content.slice_ids == undefined) {
+				throw Error(
+					`Attempted to insert content without processed slice_ids (id: ${content.id})`
+				)
+			}
+		})
 		await prisma.module.update({
 			where: {
 				id: body.module.id,
@@ -281,6 +296,7 @@ export async function createContent(
 						data: body.content.map((content) => {
 							return {
 								...content,
+								slice_ids: content.slice_ids!, //Safe since we check for undefined above
 								auth_id: auth.id, //Cant use connect syntax with createMany
 							}
 						}),
@@ -306,7 +322,7 @@ export async function createContent(
 			data: {
 				handle: auth.handle,
 				files: files.length,
-				vectors: body.content.map((c: any) => c.id), //TODO: Array of vector/slices counts per file
+				vectors: body.content.map((c: any) => c.slice_ids), //TODO: Array of vector/slices counts per file
 				tokens: [], //TODO: Array of total token usage per file
 			},
 		})
@@ -319,7 +335,6 @@ export async function createContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
-	await prisma.$disconnect()
 }
 
 export async function deleteContent(
@@ -329,7 +344,6 @@ export async function deleteContent(
 	content_ids: number[],
 	update?: boolean
 ) {
-	await prisma.$connect()
 	console.log(content_ids)
 	try {
 		if (!content_ids) {
@@ -340,71 +354,95 @@ export async function deleteContent(
 			throw new ContentManagerError(`body.content is not an array`)
 		}
 
-		//Find the documents
-		const ids = content_ids
-		const contents = await prisma.content.findMany({
-			where: {
-				auth_id: auth.id,
-				id: {
-					in: ids,
-				},
-			},
-		})
-
-		if (contents.length == 0) {
-			throw new ContentManagerError(`Unable to find content`, null, ids)
-		}
-
-		const slices = contents.map((i) => i.slice_ids.split(","))
-
-		for (let idx = 0; idx < slices.length; idx++) {
-			const _slices = slices[idx]
-
-			//Delete embedding
+		//Delete embeddings from vector db
+		for (let idx = 0; idx < content_ids.length; idx++) {
+			const id = content_ids[idx]
 			console.log(
 				`${chalk.magenta(
 					"[Debugging]"
-				)} :: Deleting embedding for file ${idx}`
+				)} :: Deleting embedding for content id:${id}`
 			)
-			const success = await deleteEmbedding(auth.handle, _slices)
+			const success = await deleteEmbedding(auth.handle, id)
+
 			console.log(success)
 			if (!success) {
 				throw new ContentManagerError(
 					`Unable to delete embedding`,
 					null,
-					{ _id: ids[idx], _slices: _slices }
-				)
-			}
-
-			if (success.length !== _slices.length) {
-				throw new ContentManagerError(
-					`Unable to delete some embedding`,
-					null,
-					{
-						_id: ids[idx],
-						_slices: _slices.filter((i: string) =>
-							success.includes(i)
-						),
-					}
+					{ content_id: id }
 				)
 			}
 		}
+
+		// //Find the documents
+		// const ids = content_ids
+		// const contents = await prisma.content.findMany({
+		// 	where: {
+		// 		auth_id: auth.id,
+		// 		id: {
+		// 			in: ids,
+		// 		},
+		// 	},
+		// })
+
+		// if (contents.length == 0) {
+		// 	throw new ContentManagerError(`Unable to find content`, null, ids)
+		// }
+
+		// const slices = contents.map((i) => i.slice_ids.split(","))
+
+		// for (let idx = 0; idx < slices.length; idx++) {
+		// 	const _slices = slices[idx]
+
+		// 	//Delete embedding
+		// 	console.log(
+		// 		`${chalk.magenta(
+		// 			"[Debugging]"
+		// 		)} :: Deleting embedding for file ${idx}`
+		// 	)
+		// 	const success = await deleteEmbedding(auth.handle, _slices)
+		// 	console.log(success)
+		// 	if (!success) {
+		// 		throw new ContentManagerError(
+		// 			`Unable to delete embedding`,
+		// 			null,
+		// 			{ _id: ids[idx], _slices: _slices }
+		// 		)
+		// 	}
+
+		// 	if (success.length !== _slices.length) {
+		// 		throw new ContentManagerError(
+		// 			`Unable to delete some embedding`,
+		// 			null,
+		// 			{
+		// 				_id: ids[idx],
+		// 				_slices: _slices.filter((i: string) =>
+		// 					success.includes(i)
+		// 				),
+		// 			}
+		// 		)
+		// 	}
+		// }
 		//Delete documents from db
 		console.log(
 			`${chalk.magenta(
 				"[Debugging]"
-			)} :: Deleting documents for files ${ids}`
+			)} :: Deleting documents for files ${content_ids}`
 		)
 		const result = await prisma.content.deleteMany({
 			where: {
 				auth_id: auth.id,
 				id: {
-					in: ids,
+					in: content_ids,
 				},
 			},
 		})
 		if (!result) {
-			throw new ContentManagerError(`Unable to delete content`, null, ids)
+			throw new ContentManagerError(
+				`Unable to delete content`,
+				null,
+				content_ids
+			)
 		}
 
 		//Check if course,section,activity is empty and delete if so
@@ -451,7 +489,7 @@ export async function deleteContent(
 			message: "Content deleted successfully",
 			data: {
 				handle: auth.handle,
-				_id: ids,
+				_id: content_ids,
 			},
 		})
 	} catch (error) {
@@ -463,7 +501,6 @@ export async function deleteContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
-	if (!update) await prisma.$disconnect()
 }
 
 export async function getContent(
@@ -472,7 +509,6 @@ export async function getContent(
 	auth: Authorization,
 	content_ids?: number[]
 ) {
-	await prisma.$connect()
 	try {
 		console.log(content_ids)
 		const content = await prisma.content.findMany({
@@ -486,6 +522,9 @@ export async function getContent(
 				},
 			},
 		})
+		if (content.length == 0) {
+			throw new Error(`No content found with ids: [${content_ids}]`)
+		}
 		return response.status(200).json({
 			route: request.url,
 			isSuccess: true,
@@ -501,5 +540,4 @@ export async function getContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
-	await prisma.$disconnect()
 }
