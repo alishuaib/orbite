@@ -8,22 +8,17 @@ import {
 	createContent,
 	deleteContent,
 	getContent,
+	ContentBodySchema,
 } from "@/lib/contentManager"
-import formidable from "formidable"
 
 export const config = {
 	api: {
 		bodyParser: false,
 	},
 }
-interface FormidableResult {
-	err: any | null
-	fields: formidable.Fields
-	files: formidable.Files
-}
 
 //
-// Create a new content item
+// Content API
 //
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
@@ -95,30 +90,12 @@ async function POST(
 	auth: Authorization
 ) {
 	function validatePOST(body: any) {
+		body.fields.body = JSON.parse(body.fields.body) //Parse JSON body
 		console.log(body)
 		//TODO: SETUP SCHEMA
-		let schema = z.object({
-			fields: z.object({
-				course: z.object({
-					id: z.number(),
-					title: z.string(),
-					label: z.string().optional(),
-					summary: z.string().optional(),
-					icon: z.string().optional(),
-					visible: z.boolean(),
-					url: z.string().optional(),
-					namespace: z.string().optional(),
-					category: z.string().optional(),
-					tags: z.string().optional(),
-					version: z.string(),
-					meta: z.record(z.any()).optional(),
-				}),
-			}),
-			files: z.array(z.any()),
-			err: z.any().optional(),
-		})
+
 		try {
-			return schema.parse(body)
+			return ContentBodySchema.parse(body)
 		} catch (error) {
 			console.log(error)
 			throw new Error(`Invalid course object for POST: ${error}`)
@@ -143,29 +120,9 @@ async function PATCH(
 	auth: Authorization
 ) {
 	function validatePATCH(body: any) {
-		//TODO: SETUP SCHEMA
-		let schema = z.object({
-			fields: z.object({
-				course: z.object({
-					id: z.number(),
-					title: z.string(),
-					label: z.string().optional(),
-					summary: z.string().optional(),
-					icon: z.string().optional(),
-					visible: z.boolean(),
-					url: z.string().optional(),
-					namespace: z.string().optional(),
-					category: z.string().optional(),
-					tags: z.string().optional(),
-					version: z.string(),
-					meta: z.record(z.any()).optional(),
-				}),
-			}),
-			files: z.array(z.any()),
-			err: z.any().optional(),
-		})
+		body.fields.body = JSON.parse(body.fields.body) //Parse JSON body
 		try {
-			return schema.parse(body)
+			return ContentBodySchema.parse(body)
 		} catch (error) {
 			console.log(error)
 			throw new Error(`Invalid course object for PATCH: ${error}`)

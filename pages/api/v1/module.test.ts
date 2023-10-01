@@ -111,8 +111,8 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
 			url: "https://www.orbite.xyz/test-module",
 			version: Math.floor(Date.now() / 1000).toString(),
 			meta: {
-				fieldA: "valueA",
-				fieldB: "valueB",
+				fieldA: "valueA EDITED",
+				fieldB: "valueB EDITED",
 			},
 		},
 	}

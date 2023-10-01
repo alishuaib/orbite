@@ -170,10 +170,10 @@ export async function insertItem(
 		_ids: string[]
 		documents: string[]
 		metas: {
-			course_id: string
-			section_id: string
-			module_id: string
-			content_id: string // Content this slice of text belongs to
+			course_id: number
+			section_id: number
+			module_id: number
+			content_id: number // Content this slice of text belongs to
 			slice_index: number // Index of slice in content
 		}[]
 	}
@@ -223,7 +223,7 @@ export async function insertItem(
 export async function deleteItem(
 	_handle: string,
 	namespace: string = "content",
-	_id: string
+	_id: number //ID of content to delete
 ) {
 	try {
 		namespace = namespace.charAt(0).toUpperCase() + namespace.slice(1)
@@ -231,22 +231,25 @@ export async function deleteItem(
 
 		if (!collection) return null
 
-		const res = await client.data
-			.deleter()
+		const res = await client.batch
+			.objectsBatchDeleter()
 			.withClassName(namespace)
-			.withId(_id)
+			.withWhere({
+				path: ["content_id"],
+				operator: "Equal",
+				valueNumber: _id,
+			})
 			.withTenant(_handle)
+			.withOutput("verbose")
 			.do()
-
-		return _id
-	} catch (error) {
-		//No Vector in db
-		if ((error as Error).message == "usage error (404): ") {
-			console.log(`Usage Error: No vector in db ${_id}`)
-			return _id
+		console.log(res)
+		if (!res.results?.objects || res.results?.matches == 0) {
+			throw Error(`Usage Error: No vector in db for content id: ${_id}`)
 		}
-		console.log(error)
-		return null
+		const results = res.results?.objects?.flatMap((i) => i.id)
+		return results
+	} catch (error) {
+		throw error
 	}
 }
 

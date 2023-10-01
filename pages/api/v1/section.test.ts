@@ -64,11 +64,11 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
 		},
 		section: {
 			id: 99999,
-			title: "Test Module",
-			summary: "This is a test module",
+			title: "Test Section",
+			summary: "This is a test section",
 			order: "1",
 			visible: true,
-			url: "https://www.orbite.xyz/test-module",
+			url: "https://www.orbite.xyz/test-section",
 			version: Math.floor(Date.now() / 1000).toString(),
 			meta: {
 				fieldA: "valueA",
@@ -104,15 +104,15 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
 	let mockBody = {
 		section: {
 			id: 99999,
-			title: "Test Module EDITED",
-			summary: "This is a test module EDITED",
+			title: "Test Section EDITED",
+			summary: "This is a test section EDITED",
 			order: "1",
 			visible: true,
-			url: "https://www.orbite.xyz/test-module",
+			url: "https://www.orbite.xyz/test-section",
 			version: Math.floor(Date.now() / 1000).toString(),
 			meta: {
-				fieldA: "valueA",
-				fieldB: "valueB",
+				fieldA: "valueA EDITED",
+				fieldB: "valueB EDITED",
 			},
 		},
 	}

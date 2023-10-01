@@ -104,18 +104,18 @@ async function PATCH(request: NextApiRequest, response: NextApiResponse) {
 	let mockBody = {
 		course: {
 			id: 99999,
-			title: "Updated Test Course",
-			label: "updated-test-course",
-			summary: "This is a updated test course",
+			title: "Test Course EDITED",
+			label: "test-course-edited",
+			summary: "This is a EDITED test course",
 			visible: false,
-			url: "https://www.orbite.xyz/updated-test-course",
+			url: "https://www.orbite.xyz/test-course-edited",
 			namespace: "testing",
 			category: "Testing",
 			tags: "test,testing",
 			version: Math.floor(Date.now() / 1000).toString(),
 			meta: {
-				fieldA: "valueA",
-				fieldB: "valueB",
+				fieldA: "valueA EDITED",
+				fieldB: "valueB EDITED",
 			},
 		},
 	}
