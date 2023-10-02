@@ -26,21 +26,60 @@ model Organization{
   config OrganizationConfig @relation(name:"OrganizationConfig",fields: [id], references: [id])
   @@index([id])
 }
+model OrganizationConfig{
+  id Int @id @default(autoincrement())
+  //TODO: Add organization wide config fields as settings require
+
+  user Organization? @relation(name:"OrganizationConfig")
+  @@index([id])
+}
 
 model User{
-  id Int @id @default(autoincrement())
+  //Clerk Unique ID
+  id String @id 
 
-  org Organization @relation(name:"OrganizationUsers",fields: [org_id], references: [id])
-  org_id Int @unique
+  org Organization? @relation(name:"OrganizationUsers",fields: [org_id], references: [id])
+  org_id Int? @unique
 
-  name String
-  email String @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  //Clerk fields (from webhook)
+  first_name String //"first_name"
+  last_name String? //"last_name" 
+  created_at String //"created_at"   
+  image_url String @default("") //"image_url" 
+  
+  isPassword Boolean //"password_enabled" 
+  is2FA Boolean //"two_factor_enabled"
+
+  username String? //"username"
+  birthday String? //"birthday" 
+  gender String? //"gender" 
+
+  emails Json? //"email_addresses" 
+  primary_email_id String //"primary_email_address_id" 
+
+  phone_numbers Json? //"phone_numbers"
+  primary_phone_number_id String? //"primary_phone_number_id"
+
+  web3_wallets Json? //"web3_wallets"
+  primary_web3_wallet_id String? //"primary_web3_wallet_id"
+
+  //Orbite fields
   is_onboarded Boolean @default(false)
 
   //Relations
-  config UserConfig @relation(name:"UserConfig",fields: [id], references: [id])
+  config UserConfig? @relation(name:"UserConfig",fields: [config_id], references: [id])
+  config_id Int? @unique
+  @@index([id])
+}
+model UserConfig{
+  //Clerk Unique ID
+  id Int @id @default(autoincrement())
+  
+  //TODO: Add user config fields as settings require
+  theme String? @default("light")
+
+  user User? @relation(name:"UserConfig")
+
   @@index([id])
 }
 
@@ -69,21 +108,8 @@ model Auth {
   @@index([org_id])
 }
 
-model UserConfig{
-  id Int @id @default(autoincrement())
-  //TODO: Add user config fields as settings require
 
-  user User? @relation(name:"UserConfig")
-  @@index([id])
-}
 
-model OrganizationConfig{
-  id Int @id @default(autoincrement())
-  //TODO: Add organization wide config fields as settings require
-
-  user Organization? @relation(name:"OrganizationConfig")
-  @@index([id])
-}
 
 //Orbite user data tables
 
