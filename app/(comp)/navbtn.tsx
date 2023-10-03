@@ -6,6 +6,7 @@ export default function NavBtn(props: {
 	href?: string
 	label?: string
 	children?: ReactElement
+	isAspect?: boolean
 }) {
 	const { push } = useRouter()
 	const handleClick: MouseEventHandler<HTMLDivElement> = (event) => {
@@ -14,7 +15,11 @@ export default function NavBtn(props: {
 	}
 	return (
 		<div
-			className={` gap-2 aspect-square w-fit bg-gray-200 rounded p-2 hover:bg-gray-300 hover:cursor-pointer transition-all hover:scale-105 active:scale-95 group flex shadow-sm hover:shadow-inner items-center justify-center ${props.override}`}
+			className={` gap-2 ${
+				props.isAspect == true ?? "aspect-square"
+			} w-fit bg-gray-200 rounded p-2 hover:bg-gray-300 hover:cursor-pointer transition-all hover:scale-105 active:scale-95 group flex shadow-sm hover:shadow-inner items-center justify-center ${
+				props.override
+			}`}
 			onClick={handleClick}
 		>
 			{props.label && <p className="text-gray-500">{props.label}</p>}

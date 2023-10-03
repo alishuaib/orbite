@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 async function verifyApiKeyPrisma(apiKey: string) {
 	const auth = await prisma.auth.findUnique({
 		include: {
-			org: true,
+			user: true,
 		},
 		where: {
 			API_KEY: apiKey,
@@ -17,7 +17,7 @@ async function verifyApiKeyPrisma(apiKey: string) {
 }
 
 const authTyping = Prisma.validator<Prisma.AuthDefaultArgs>()({
-	include: { org: true },
+	include: { user: true },
 })
 
 type Authorization = Prisma.AuthGetPayload<typeof authTyping>
@@ -32,6 +32,7 @@ export default function withApiKeyVerification(
 ) {
 	return async (req: NextApiRequest, res: NextApiResponse) => {
 		const apiKey = req.headers["x-orbite-api-key"] as string
+		console.log(apiKey)
 		if (!apiKey) {
 			return res
 				.status(401)
