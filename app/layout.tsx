@@ -20,8 +20,20 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<ClerkProvider>
-			<html lang="en">
+		<ClerkProvider
+			localization={{
+				// formButtonPrimary: "Sign In",
+				signIn: {
+					start: {
+						actionText: "New to Orbite?",
+					},
+				},
+			}}
+		>
+			<html
+				lang="en"
+				className={lato.className}
+			>
 				<MainContext>
 					<body>{children}</body>
 				</MainContext>

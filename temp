@@ -49,7 +49,7 @@ model User{
   isPassword Boolean //"password_enabled" 
   is2FA Boolean //"two_factor_enabled"
 
-  username String //"username"
+  username String? //"username"
   birthday String? //"birthday" 
   gender String? //"gender" 
 

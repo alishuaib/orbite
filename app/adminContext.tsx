@@ -1,8 +1,8 @@
 "use client"
+import { useAuth } from "@clerk/nextjs"
 //NextJS has React Strict Mode auto enabled for Development
 // This is why the Context will re-render twice only during development phase
 import { writeContext, readContext } from "@/app/context"
-import { Course, Module, File } from "@/lib/@schemas"
 
 import React, {
 	useContext,
@@ -24,6 +24,8 @@ interface FileMap {
 }
 
 export default function AdminContext({ children }: Props): JSX.Element {
+	const { isLoaded, userId, sessionId, getToken } = useAuth()
+
 	const [handle, setHandle] = useState<string>("")
 	const courses = readContext()?.courses
 	const [modules, setModules] = useState<ModuleMap>({})
@@ -43,6 +45,35 @@ export default function AdminContext({ children }: Props): JSX.Element {
 
 	const readContent = writeContext()?.readContent!
 	const getPreview = writeContext()?.getPreview!
+
+	useEffect(() => {
+		if (!isLoaded || !userId) return
+		if (handle == "") {
+			try {
+				fetch(`/api/auth/user?method=GET`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						user: {
+							id: userId,
+						},
+					}),
+				})
+					.then((res) =>
+						res
+							.json()
+							.then((body) => {
+								console.log(body)
+								setHandle(body.data.auth.handle)
+							})
+							.catch((err) => console.log(err))
+					)
+					.catch((err) => console.log(err))
+			} catch (error) {
+				console.error(error)
+			}
+		}
+	}, [userId])
 
 	useEffect(() => {
 		if (handle == "") return

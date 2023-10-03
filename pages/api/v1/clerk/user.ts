@@ -9,6 +9,7 @@ import type {
 import { Webhook } from "svix"
 import prisma from "@/lib/prisma-client"
 import { Prisma } from "@prisma/client"
+import { randomInt } from "crypto"
 
 const webhookSecret: string = process.env.CLERK_WEBHOOK_SECRET as string
 
@@ -88,9 +89,13 @@ async function userCreated(
 				config: {
 					create: {},
 				},
+				auth: {
+					create: {},
+				},
 			},
 			include: {
 				config: true,
+				auth: true,
 			},
 		})
 		console.log(`User ${data.id} created successfully`)
@@ -128,9 +133,18 @@ async function userUpdated(
 				web3_wallets: data.web3_wallets as [],
 				primary_web3_wallet_id: data.primary_web3_wallet_id,
 				is_onboarded: false,
+				auth: {
+					create: {
+						handle:
+							(data.username
+								? data.username.toLowerCase()
+								: data.first_name.toLowerCase()) +
+							randomInt(1000, 9999).toString(),
+					},
+				},
 			},
 			include: {
-				config: true,
+				auth: true,
 			},
 		})
 		console.log(`User ${data.id} updated successfully`)
