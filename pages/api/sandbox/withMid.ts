@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next/types"
 import withApiKeyVerification, {
 	Authorization,
 } from "@/lib/middleware/checkAuth"
-import { Auth } from "@/lib/@schemas"
 
 import {
 	downloadForm,
@@ -30,97 +29,11 @@ interface FormidableResult {
 //
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
-		const { body, query } = req
-
-		let response: any
-		let form: FormidableResult
-		let objids: any
-
-		switch (query.method) {
-			case "create":
-				form = await downloadForm(req)
-				objids = {
-					c: new ObjectId(),
-					s: new ObjectId(),
-					a: new ObjectId(),
-				}
-				form.fields.body = JSON.stringify({
-					course: {
-						_id: objids.c,
-					},
-					section: {
-						_id: objids.s,
-						_course: objids.c,
-					},
-					activity: {
-						_id: objids.a,
-						_course: objids.c,
-						_section: objids.s,
-					},
-					content: [
-						{
-							_id: new ObjectId(),
-							_course: objids.c,
-							_section: objids.s,
-							_activity: objids.a,
-						},
-					],
-				})
-				await createContent(req, res, auth, form)
-				break
-			case "update":
-				form = await downloadForm(req)
-				objids = {
-					c: new ObjectId(),
-					s: new ObjectId(),
-					a: new ObjectId(),
-				}
-				form.fields.body = JSON.stringify({
-					course: {
-						_id: objids.c,
-					},
-					section: {
-						_id: objids.s,
-						_course: objids.c,
-					},
-					activity: {
-						_id: objids.a,
-						_course: objids.c,
-						_section: objids.s,
-					},
-					content: [
-						{
-							_id: new ObjectId(),
-							_course: objids.c,
-							_section: objids.s,
-							_activity: objids.a,
-						},
-					],
-				})
-				await createContent(req, res, auth, form, true)
-				break
-			case "delete":
-				await deleteContent(req, res, auth, req.body)
-				break
-			case "get":
-				response = await weaviate.getAllItems("moonlite", "content")
-				res.status(200).json(response)
-				break
-			case "erase":
-				response = await weaviate.eraseCollection("content")
-				res.status(200).json(response)
-				break
-			case "query":
-				response = await weaviate.generativeResponse(
-					auth.handle,
-					"Content",
-					req.body._course,
-					req.body.query
-				)
-				res.status(200).json(response)
-				break
-			default:
-				break
-		}
+		const response = await weaviate.getItem(auth.handle, "content", 99999)
+		res.json({
+			status: 200,
+			message: "success",
+			data: response,
+		})
 	}
 )

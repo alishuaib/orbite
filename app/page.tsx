@@ -31,7 +31,7 @@ export default function Home() {
 							</svg>
 						</NavBtn>
 						<NavBtn
-							href="/admin/moonlite"
+							href="/dashboard"
 							label="Admin Preview"
 						>
 							<svg
@@ -71,7 +71,7 @@ export default function Home() {
 					{/* Mount the UserButton component */}
 					<Link
 						className={`gap-2 w-fit  rounded p-2 hover:cursor-pointer transition-all hover:scale-105 active:scale-95 group flex items-center justify-center text-gray-500`}
-						href={"/admin"}
+						href={"/dashboard"}
 					>
 						<p>Go to Dashboard</p>
 						<svg

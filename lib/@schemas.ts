@@ -1,81 +1,100 @@
-import { ObjectId } from "mongodb"
+import { Prisma } from "@prisma/client"
 
-export type Auth = {
-	_handle: string
-	_id: string
-	domain: string
-	name: string
-	api_key: string
-	icon: string
-	platform: "moodle" | "html" | "orbite"
-	expire: string
+const authTYPE = Prisma.validator<Prisma.AuthDefaultArgs>()({
+	include: { user: true },
+})
+type Auth = Prisma.AuthGetPayload<typeof authTYPE>
+export type { Auth }
+
+const userTYPE = Prisma.validator<Prisma.UserDefaultArgs>()({
+	include: {
+		config: {
+			include: {
+				chat_config: true,
+			},
+		},
+		auth: true,
+	},
+})
+
+type User = Prisma.UserGetPayload<typeof userTYPE>
+export type { User }
+
+const courseTYPE = Prisma.validator<Prisma.CourseDefaultArgs>()({
+	include: {
+		sections: { include: { modules: { include: { contents: true } } } },
+		auth: true,
+	},
+})
+type Course = Prisma.CourseGetPayload<typeof courseTYPE>
+export type { Course }
+
+const sectionTYPE = Prisma.validator<Prisma.SectionDefaultArgs>()({
+	include: {
+		modules: { include: { contents: true } },
+		auth: true,
+		parent: true,
+	},
+})
+type Section = Prisma.SectionGetPayload<typeof sectionTYPE>
+export type { Section }
+
+const moduleTYPE = Prisma.validator<Prisma.ModuleDefaultArgs>()({
+	include: {
+		contents: true,
+		auth: true,
+		parent: { include: { parent: true } },
+	},
+})
+type Module = Prisma.ModuleGetPayload<typeof moduleTYPE>
+export type { Module }
+
+const contentTYPE = Prisma.validator<Prisma.ContentDefaultArgs>()({
+	include: {
+		auth: true,
+		parent: { include: { parent: { include: { parent: true } } } },
+	},
+})
+type Content = Prisma.ContentGetPayload<typeof contentTYPE>
+export type { Content }
+
+type Preview = {
+	content_id: number
+	course_id: number
+	module_id: number
+	section_id: number
+	text: string[]
 }
+export type { Preview }
 
-export type Course = {
-	_id: ObjectId | string
-	title: string
-	summary?: string
-	icon: string
-	label: string
-	category: string
-	slug: string
-	version: string
-	visible: boolean
-	_ref: string
-	meta?: any
-}
-
-export type Section = {
-	_id: ObjectId | string
-	title: string
-	summary?: string
-	duration?: number
-	order: string
-	slug: string
-	visible: boolean
-	version: string
-	_course: string
-	_ref: string
-	_scorm?: string
-	meta?: any
-}
-
-export type Activity = {
-	_id: ObjectId | string
-	title: string
-	summary?: string
-	duration?: number
-	order: string
-	slug: string
-	visible: boolean
-	version: string
-	_course: string
-	_section: string
-	_ref: string
-	_scorm?: string
-	meta?: any
-}
-
-export type Content = {
-	_id: ObjectId | string
-	name: string
-	ext: string
-	dir: string
-	metadata: {
-		size: number | null
-		mimetype: string | null
-		mtime: Date | null | undefined
+type GenerativeAnswer = {
+	data: {
+		Get: {
+			Content: [
+				{
+					_additional: {
+						generate: {
+							error: any | null
+							singleResult: string
+						}
+					}
+					content_id: number
+					course_id: number
+					module_id: number
+					section_id: number
+					slice_index: number
+					text: string
+				}
+			]
+		}
 	}
-	url: string
-	visible: boolean
-	version: string
-	hash: string
-	_course: string
-	_section: string
-	_activity: string
-	_slices: string[]
-	_resource?: string // Use for moodle resources
-	_scorm?: string
-	_scorm_ref?: string
-	meta?: any
 }
+export type { GenerativeAnswer }
+
+type Session = {
+	course_id?: string
+	course_title?: string
+	expiry: number
+}
+
+export type { Session }

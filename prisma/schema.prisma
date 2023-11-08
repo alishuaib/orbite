@@ -66,7 +66,7 @@ model User{
   is_onboarded Boolean @default(false)
 
   //Relations
-  config UserConfig @relation(name:"UserConfig",fields: [config_id], references: [id])
+  config UserConfig @relation(name:"UserConfig",fields: [config_id], references: [id], onDelete: Cascade)
   config_id Int @unique
 
   auth Auth @relation(name:"UserAuth" ,fields: [auth_id], references: [id])
@@ -82,6 +82,17 @@ model UserConfig{
   theme String? @default("light")
 
   user User? @relation(name:"UserConfig")
+
+  chat_config ChatCustomization? @relation(name:"ChatCustomization" ,fields: [chat_config_id], references: [id] , onDelete: Cascade)
+  chat_config_id Int? @unique
+}
+
+model ChatCustomization{
+  id Int @id @default(autoincrement())
+  primary_color String? @default("bg-gray-200")
+  secondary_color String? @default("bg-violet-500")
+  user UserConfig? @relation(name:"ChatCustomization")
+  logo String? @db.MediumText
 }
 
 enum platform {
@@ -144,12 +155,13 @@ model Section{
   auth Auth @relation(name:"AuthSections",fields: [auth_id], references: [id])
 
 
-  parent Course @relation("CourseSections", fields: [course_id], references: [id])
+  parent Course @relation("CourseSections", fields: [course_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   course_id Int
 
   title String
   summary String?
   order String
+  sequence String? //Sequence of modules by ID
   visible Boolean @default(true)
 
   url String? //URL to section homepage
@@ -169,12 +181,11 @@ model Module{
   auth_id Int
   auth Auth @relation(name:"AuthModules",fields: [auth_id], references: [id])
   
-  parent Section @relation("SectionModules", fields: [section_id], references: [id])
+  parent Section @relation("SectionModules", fields: [section_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   section_id Int
 
   title String
   summary String?
-  order String
   visible Boolean @default(true)
 
   url String? //URL to module homepage
@@ -194,7 +205,7 @@ model Content{
   auth_id Int
   auth Auth @relation(name:"AuthContents",fields: [auth_id], references: [id])
   
-  parent Module @relation("ModuleContents", fields: [module_id], references: [id])
+  parent Module @relation("ModuleContents", fields: [module_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   module_id Int
 
   slice_ids String @db.LongText //List of slices for content
@@ -203,9 +214,9 @@ model Content{
   ext String
   visible Boolean @default(true)
 
-  size Int?
+  size Int? //Filesize in bytes
   mimetype String?
-  modified_at String? //UTC timestamp of last modified date
+  created_at String? //UTC timestamp of last modified date
 
   url String? //URL to content homepage
 

@@ -96,7 +96,6 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
 				id: 99999,
 				title: "Test Module",
 				summary: "This is a test module",
-				order: "1",
 				visible: true,
 				url: "https://www.orbite.xyz/test-module",
 				version: Math.floor(Date.now() / 1000).toString(),
@@ -115,7 +114,7 @@ async function POST(request: NextApiRequest, response: NextApiResponse) {
 					size: 1000,
 					mimetype:
 						"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-					modified_at: new Date().toUTCString(),
+					created_at: new Date().toUTCString(),
 					url: "https://www.orbite.xyz/test-content",
 					version: Math.floor(Date.now() / 1000).toString(),
 					meta: {

@@ -4,10 +4,14 @@ import withApiKeyVerification, {
 } from "@/lib/middleware/checkAuth"
 import prisma from "@/lib/prisma-client"
 import { z } from "zod"
+import { deleteEmbedding } from "@/lib/embedding"
+import { cascadeCleanup } from "@/lib/contentManager"
 
 //
-// Module API
+// Section API
 //
+export { GET, POST, PATCH, DELETE }
+
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
 		const { query } = req
@@ -43,7 +47,7 @@ async function GET(
 ) {
 	function validateGET(body: any) {
 		let schema = z.object({
-			module: z.object({
+			section: z.object({
 				id: z.array(z.number()).optional(),
 			}),
 		})
@@ -51,39 +55,44 @@ async function GET(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid module object for GET: ${error}`)
+			throw new Error(`Invalid section object for GET: ${error}`)
 		}
 	}
 	try {
 		const body = validateGET(req.body)
-		let find = await prisma.module.findMany({
+		let find = await prisma.section.findMany({
 			where: {
 				auth_id: auth.id,
 				id: {
-					//If given a list of ids, return those modules
-					//Otherwise, return all modules
+					//If given a list of ids, return those sections
+					//Otherwise, return all sections
 					in:
-						body.module.id == undefined ||
-						!Array.isArray(body.module.id)
+						body.section.id == undefined ||
+						!Array.isArray(body.section.id)
 							? undefined
-							: body.module.id,
+							: body.section.id,
 				},
 			},
 			include: {
 				parent: true,
-				contents: true,
+				modules: {
+					include: {
+						contents: true,
+					},
+				},
 			},
 		})
 		if (find.length == 0) {
-			throw new Error(`No modules found with ids: ${body.module.id}`)
+			throw new Error(`No sections found with ids: ${body.section.id}`)
 		}
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Module(s) found successfully",
+			message: "Sections(s) found successfully",
 			data: find,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -101,10 +110,10 @@ async function POST(
 	function validatePOST(body: any) {
 		console.log(body)
 		let schema = z.object({
-			section: z.object({
+			course: z.object({
 				id: z.number(),
 			}),
-			module: z.object({
+			section: z.object({
 				id: z.number(),
 				title: z.string(),
 				summary: z.string().optional(),
@@ -119,14 +128,14 @@ async function POST(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid module object for POST: ${error}`)
+			throw new Error(`Invalid section object for POST: ${error}`)
 		}
 	}
 	try {
 		const body = validatePOST(req.body)
-		let create = await prisma.module.create({
+		let create = await prisma.section.create({
 			data: {
-				...body.module,
+				...body.section,
 				auth: {
 					connect: {
 						id: auth.id,
@@ -134,7 +143,7 @@ async function POST(
 				},
 				parent: {
 					connect: {
-						id: body.section.id,
+						id: body.course.id,
 					},
 				},
 			},
@@ -142,12 +151,13 @@ async function POST(
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Module created successfully",
+			message: "Sections created successfully",
 			data: create,
 		})
 	} catch (error: any) {
+		console.log(error)
 		if (error.code == "P2025")
-			error.message = `Parent section id:${req.body.section.id} not found in-sync with Orbite`
+			error.message = `Parent course id:${req.body.course.id} not found in-sync with Orbite`
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -164,7 +174,7 @@ async function PATCH(
 ) {
 	function validatePATCH(body: any) {
 		let schema = z.object({
-			module: z.object({
+			section: z.object({
 				id: z.number(),
 				title: z.string(),
 				summary: z.string().optional(),
@@ -179,27 +189,28 @@ async function PATCH(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid module object for PATCH: ${error}`)
+			throw new Error(`Invalid section object for PATCH: ${error}`)
 		}
 	}
 	try {
 		const body = validatePATCH(req.body)
-		let update = await prisma.module.update({
+		let update = await prisma.section.update({
 			where: {
 				auth_id: auth.id,
-				id: body.module.id,
+				id: body.section.id,
 			},
 			data: {
-				...body.module,
+				...body.section,
 			},
 		})
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Modules updated successfully",
+			message: "Sections updated successfully",
 			data: update,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -216,7 +227,7 @@ async function DELETE(
 ) {
 	function validateDELETE(body: any) {
 		let schema = z.object({
-			module: z.object({
+			section: z.object({
 				id: z.array(z.number()),
 			}),
 		})
@@ -224,29 +235,36 @@ async function DELETE(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid module object for DELETE: ${error}`)
+			throw new Error(`Invalid section object for DELETE: ${error}`)
 		}
 	}
 	try {
 		const body = validateDELETE(req.body)
-		let del = await prisma.module.deleteMany({
+		//Delete Embeddings by section.id
+		for (let i = 0; i < body.section.id.length; i++) {
+			await deleteEmbedding(auth.handle, body.section.id[i], "section")
+		}
+		let del = await prisma.section.deleteMany({
 			where: {
 				auth_id: auth.id,
 				id: {
-					in: body.module.id,
+					in: body.section.id,
 				},
 			},
 		})
 		if (del.count == 0) {
-			throw new Error(`No modules found with ids: ${body.module.id}`)
+			throw new Error(`No sections found with ids: ${body.section.id}`)
 		}
+		//Cascade cleanup
+		await cascadeCleanup(auth.id)
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Modules deleted successfully",
+			message: "Sections deleted successfully",
 			data: del,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,

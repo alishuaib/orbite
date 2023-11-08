@@ -20,6 +20,8 @@ export const config = {
 //
 // Content API
 //
+export { GET, POST, PATCH, DELETE }
+
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
 		let form = await downloadForm(req)
@@ -75,8 +77,9 @@ async function GET(
 		const body = validateGET(req.body)
 		await getContent(req, res, auth, body.content.id)
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
-			route: `${req.query.method}::${req.url}`,
+			route: `${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -90,7 +93,10 @@ async function POST(
 	auth: Authorization
 ) {
 	function validatePOST(body: any) {
+		// console.log(body.fields.body)
 		body.fields.body = JSON.parse(body.fields.body) //Parse JSON body
+		// console.log(body.fields.body)
+
 		console.log(body)
 		//TODO: SETUP SCHEMA
 
@@ -105,8 +111,9 @@ async function POST(
 		const body = validatePOST(req.body)
 		await createContent(req, res, auth, body)
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
-			route: `${req.query.method}::${req.url}`,
+			route: `${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -132,8 +139,9 @@ async function PATCH(
 		const body = validatePATCH(req.body)
 		await createContent(req, res, auth, body, true)
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
-			route: `${req.query.method}::${req.url}`,
+			route: `${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,
@@ -163,8 +171,9 @@ async function DELETE(
 		const body = validateDELETE(req.body)
 		await deleteContent(req, res, auth, body.content.id)
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
-			route: `${req.query.method}::${req.url}`,
+			route: `${req.url}`,
 			isSuccess: false,
 			message: error.message,
 			data: null,

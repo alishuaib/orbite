@@ -35,54 +35,29 @@ async function _createCollection(_collection: string) {
 						dataType: ["text"],
 					},
 					{
-						name: "_course",
+						name: "course_id",
 						description: "Metadata for course id",
-						dataType: ["text"],
-						moduleConfig: {
-							"text2vec-openai": {
-								skip: true,
-							},
-						},
+						dataType: ["number"],
 					},
 					{
-						name: "_section",
+						name: "section_id",
 						description: "Metadata for section id",
-						dataType: ["text"],
-						moduleConfig: {
-							"text2vec-openai": {
-								skip: true,
-							},
-						},
+						dataType: ["number"],
 					},
 					{
-						name: "_activity",
-						description: "Metadata for activity id",
-						dataType: ["text"],
-						moduleConfig: {
-							"text2vec-openai": {
-								skip: true,
-							},
-						},
+						name: "module_id",
+						description: "Metadata for module id",
+						dataType: ["number"],
 					},
 					{
-						name: "_content",
+						name: "content_id",
 						description: "Metadata for parent content id",
-						dataType: ["text"],
-						moduleConfig: {
-							"text2vec-openai": {
-								skip: true,
-							},
-						},
+						dataType: ["number"],
 					},
 					{
-						name: "_sliceIdx",
+						name: "slice_index",
 						description: "Metadata for slice index",
-						dataType: ["int"],
-						moduleConfig: {
-							"text2vec-openai": {
-								skip: true,
-							},
-						},
+						dataType: ["number"],
 					},
 				],
 				multiTenancyConfig: { enabled: true },
@@ -223,7 +198,8 @@ export async function insertItem(
 export async function deleteItem(
 	_handle: string,
 	namespace: string = "content",
-	_id: number //ID of content to delete
+	_id: number, //ID of content to delete,
+	path: "course" | "section" | "module" | "content" = "content"
 ) {
 	try {
 		namespace = namespace.charAt(0).toUpperCase() + namespace.slice(1)
@@ -235,7 +211,7 @@ export async function deleteItem(
 			.objectsBatchDeleter()
 			.withClassName(namespace)
 			.withWhere({
-				path: ["content_id"],
+				path: [path + "_id"],
 				operator: "Equal",
 				valueNumber: _id,
 			})
@@ -244,7 +220,7 @@ export async function deleteItem(
 			.do()
 		console.log(res)
 		if (!res.results?.objects || res.results?.matches == 0) {
-			throw Error(`Usage Error: No vector in db for content id: ${_id}`)
+			throw Error(`Usage Error: No vector in db for ${path} id: ${_id}`)
 		}
 		const results = res.results?.objects?.flatMap((i) => i.id)
 		return results
@@ -253,10 +229,50 @@ export async function deleteItem(
 	}
 }
 
+export async function getItem(
+	_handle: string,
+	namespace: string = "content",
+	_id: number //ID of content to delete
+) {
+	try {
+		namespace = namespace.charAt(0).toUpperCase() + namespace.slice(1)
+		const collection = await _checkCollection(namespace) //Check if collection exists
+
+		if (!collection) return null
+
+		const res = await client.graphql
+			.get()
+			.withClassName(namespace)
+			.withTenant(_handle)
+			.withWhere({
+				path: ["content_id"],
+				operator: "Equal",
+				valueNumber: _id,
+			})
+			.withFields(
+				"text course_id section_id module_id content_id slice_index"
+			)
+			.do()
+
+		console.log(res)
+		if (
+			!res.data ||
+			!res.data.Get ||
+			!res.data.Get[namespace] ||
+			res.data.Get[namespace].length == 0
+		) {
+			throw Error(`Usage Error: No vector in db for content id: ${_id}`)
+		}
+		return res.data.Get[namespace]
+	} catch (error) {
+		throw error
+	}
+}
+
 export async function generativeResponse(
 	_handle: string,
 	namespace: string = "content",
-	_course: string,
+	_course: number,
 	query: string
 ) {
 	try {
@@ -272,7 +288,7 @@ export async function generativeResponse(
 				singlePrompt: `
 				Given the following extracted parts of a long document (SOURCES) about the product (PRODUCT_NAME) and a question (QUESTION), you must create a brief final answer.
 
-				Don't try to make up an answer and use the text in the SOURCES only for the answer. If you don't know the answer, just say that you don't know politely.
+				Don't try to make up an answer and use the text in the SOURCES only for the answer. If you don't know the answer, apologize and state you don't know politely.
 				
 				Provide an answer without the ANSWER: prefix.
 
@@ -283,19 +299,18 @@ export async function generativeResponse(
 				QUESTION:
 				${query}
 				=========
-				PRODUCT_NAME OR COURSE_NAME:
-				${namespace}
-				=========
 				ANSWER:
 				`,
 			})
 			.withNearText({ concepts: [query] })
 			.withWhere({
-				path: ["_course"],
+				path: ["course_id"],
 				operator: "Equal",
-				valueText: _course,
+				valueNumber: _course,
 			})
-			.withFields("text _course")
+			.withFields(
+				"text course_id section_id module_id content_id slice_index"
+			)
 			.withLimit(3)
 			.withTenant(_handle)
 			.do()
@@ -312,35 +327,35 @@ export async function generativeResponse(
 	}
 }
 
-export async function queryIndex(
-	_handle: string,
-	namespace: string = "content",
-	_id: string
-) {
-	try {
-		namespace = namespace.charAt(0).toUpperCase() + namespace.slice(1)
-		const collection = await _checkCollection(namespace) //Check if collection exists
+// export async function queryIndex(
+// 	_handle: string,
+// 	namespace: string = "content",
+// 	_id: string
+// ) {
+// 	try {
+// 		namespace = namespace.charAt(0).toUpperCase() + namespace.slice(1)
+// 		const collection = await _checkCollection(namespace) //Check if collection exists
 
-		if (!collection) return null
+// 		if (!collection) return null
 
-		const res = await client.data
-			.deleter()
-			.withClassName(namespace)
-			.withId(_id)
-			.withTenant(_handle)
-			.do()
+// 		const res = await client.data
+// 			.deleter()
+// 			.withClassName(namespace)
+// 			.withId(_id)
+// 			.withTenant(_handle)
+// 			.do()
 
-		return _id
-	} catch (error) {
-		//No Vector in db
-		if ((error as Error).message == "usage error (404): ") {
-			console.log(`Usage Error: No vector in db ${_id}`)
-			return _id
-		}
-		console.log(error)
-		return null
-	}
-}
+// 		return _id
+// 	} catch (error) {
+// 		//No Vector in db
+// 		if ((error as Error).message == "usage error (404): ") {
+// 			console.log(`Usage Error: No vector in db ${_id}`)
+// 			return _id
+// 		}
+// 		console.log(error)
+// 		return null
+// 	}
+// }
 
 export async function getAllItems(
 	_handle: string,

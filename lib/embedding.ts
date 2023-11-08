@@ -117,13 +117,11 @@ export async function searchEmbedding(
 	_module?: string
 ) {
 	//CONTINUE :: Parse the returned response into a standard return format
-	return await generativeResponse(_handle, "Content", _course, query)
+	// return await generativeResponse(_handle, "Content", _course, query)
 	// const filter: Filter = {}
 	// if (_course) filter["_course"] = { $in: [_course] }
 	// if (_module) filter["_module"] = { $in: [_module] }
-
 	// const results = await queryIndex(_handle, "file", query, filter)
-
 	// if (results && instanceOfQueryResponse(results)) {
 	// 	let res = results as QueryResponse
 	// 	return {
@@ -138,8 +136,12 @@ export async function searchEmbedding(
 	// }
 }
 
-export async function deleteEmbedding(_handle: string, content_id: number) {
-	const results = await deleteItem(_handle, "Content", content_id)
+export async function deleteEmbedding(
+	_handle: string,
+	id: number,
+	type: "course" | "section" | "module" | "content"
+) {
+	const results = await deleteItem(_handle, "Content", id, type)
 	return results
 }
 
