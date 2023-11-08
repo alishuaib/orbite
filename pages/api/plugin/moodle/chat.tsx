@@ -1,90 +1,116 @@
 /**
  * Chat integration for Moodle. Uses Iframe to embed chatbot.
  *
- * TODO: Consider changing from POST to GET request since no body is required.
  * @api {post} /api/plugin/moodle/chat
  */
 import { NextApiRequest, NextApiResponse } from "next/types"
 import ReactDOMServer from "react-dom/server"
-import withApiKeyVerification from "@/lib/middleware/apikey"
-import { Auth } from "@/lib/@schemas"
+import withApiKeyVerification, {
+	Authorization,
+	logApiRequest,
+} from "@/lib/middleware/checkAuth"
+import { createCipheriv, randomBytes, createDecipheriv } from "crypto"
 import jwt from "jsonwebtoken"
-import PluginBtn from "@/app/plugin/(comp)/btn"
-export default withApiKeyVerification(
-	async (req: NextApiRequest, res: NextApiResponse, auth: Auth) => {
-		const { method, body, headers } = req
-		console.info("api/plugin/moodle/chat", body, auth._handle)
-		const proto =
-			req.headers["x-forwarded-proto"] === "https" ? "https" : "http"
-		const host = headers.host
-		const baseUrl = `${proto}://${host}`
-		switch (method) {
-			case "POST":
-				const token = jwt.sign(
-					{
-						// apikey: headers["x-orbite-api-key"],
-						course_id: body.course_id,
-						course_name: body.course_name,
-						handle: auth._handle,
-					},
-					process.env.NEXTAUTH_SECRET as string,
-					{ expiresIn: "15s" }
-				)
-				const iframe = ReactDOMServer.renderToString(
-					<div
-						style={{
-							position: "absolute",
-							right: "0",
-							height: "100vh",
-							width: "calc(430px + 3rem)",
-							overflow: "hidden",
-							pointerEvents: "none",
-						}}
-					>
-						<div
-							id="orbite-plugin"
-							style={{
-								pointerEvents: "all",
-								position: "absolute",
-								top: "0",
-								height: "100vh",
-								width: "430px",
-								backgroundColor: "#27272a",
-								display: "flex",
-								flexDirection: "column",
-								gap: "0.5rem",
-								transition: "all 0.5s ease-in-out",
-								zIndex: "9999",
-								color: "#f4f4f5",
-								borderColor: "#71717a",
-								borderLeftWidth: "2px",
-								right: "-430px",
-								filter: "grayScale(0)",
-							}}
-						>
-							<PluginBtn
-								isActive
-								setOpen={() => null}
-							/>
-							<iframe
-								style={{
-									width: "100%",
-									height: "100%",
-									border: "none",
-								}}
-								src={`${baseUrl}/plugin?course_id=${body.course_id}&session=${token}`}
-							/>
-						</div>
-					</div>
-				)
+import { z } from "zod"
+// import PluginBtn from "@/app/plugin/(comp)/btn"
+export default async (
+	req: NextApiRequest,
+	res: NextApiResponse,
+	auth: Authorization
+) => {
+	logApiRequest(req)
+	if (!req.headers["x-orbite-api-key"])
+		return res.status(403).send("Unauthorized")
 
-				res.status(200).json({ success: true, html: iframe })
-				// res.setHeader("Content-Type", "text/html")
-				// res.status(200).send(iframe)
-				break
-			default:
-				res.setHeader("Allow", ["POST"])
-				res.status(405).end(`Not Allowed ${method}`)
+	const { method } = req
+
+	switch (method) {
+		case "POST":
+			await POST(req, res, auth)
+			break
+		default:
+			res.setHeader("Allow", ["POST"])
+			res.status(405).end(`Not Allowed ${method}`)
+	}
+}
+
+async function POST(
+	req: NextApiRequest,
+	res: NextApiResponse,
+	auth: Authorization
+) {
+	function validatePOST(body: any) {
+		let schema = z.object({
+			course: z.object({
+				id: z.number(),
+				title: z.string(),
+			}),
+		})
+		try {
+			return schema.parse(body)
+		} catch (error) {
+			console.log(error)
+			throw new Error(`Invalid course object for POST: ${error}`)
 		}
 	}
-)
+	try {
+		const body = validatePOST(req.body)
+
+		//Encrypt a session to be validated on later date (async)
+		const key = Buffer.from(process.env.AES_KEY as string, "hex")
+		const iv = randomBytes(16)
+		const cipher = createCipheriv("aes-256-cbc", key, iv)
+		let encrypt = cipher.update(
+			JSON.stringify({
+				course_id: body.course.id,
+				course_title: body.course.title,
+				API_KEY: req.headers["x-orbite-api-key"],
+				//Set expiry for 30 seconds
+				expiry: (Math.floor(Date.now() / 1000) + 30) * 1000,
+			}),
+			"utf8",
+			"hex"
+		)
+		encrypt += cipher.final("hex")
+		const session = iv.toString("hex") + ":" + encrypt
+
+		const proto =
+			req.headers["x-forwarded-proto"] === "https" ? "https" : "http"
+		const host = req.headers.host
+		const baseUrl = `${proto}://${host}`
+
+		//Build IFrame Embed
+		const iframe = ReactDOMServer.renderToString(
+			<iframe
+				style={{
+					zIndex: "9999",
+					position: "absolute",
+					right: "0",
+					bottom: "0",
+					width: "520px",
+					height: "100vh",
+					border: "none",
+					// pointerEvents: "none",
+				}}
+				// src={`${baseUrl}/plugin/embed?session=${session}`}
+				src={`http://localhost:3000/plugin/embed?session=${session}`}
+			/>
+		)
+
+		//Send HTML response
+		return res.status(200).json({
+			route: `${req.url}`,
+			isSuccess: true,
+			message: "",
+			data: iframe,
+		})
+	} catch (error: any) {
+		console.log(error)
+		return res.status(401).json({
+			route: `${req.url}`,
+			isSuccess: false,
+			message: error.message,
+			data: null,
+		})
+	}
+}

@@ -4,10 +4,14 @@ import withApiKeyVerification, {
 } from "@/lib/middleware/checkAuth"
 import prisma from "@/lib/prisma-client"
 import { z } from "zod"
+import { deleteEmbedding } from "@/lib/embedding"
+import { cascadeCleanup } from "@/lib/contentManager"
 
 //
-// Section API
+// Course API
 //
+export { GET, POST, PATCH, DELETE }
+
 export default withApiKeyVerification(
 	async (req: NextApiRequest, res: NextApiResponse, auth: Authorization) => {
 		const { query } = req
@@ -43,7 +47,7 @@ async function GET(
 ) {
 	function validateGET(body: any) {
 		let schema = z.object({
-			section: z.object({
+			course: z.object({
 				id: z.array(z.number()).optional(),
 			}),
 		})
@@ -51,43 +55,47 @@ async function GET(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid section object for GET: ${error}`)
+			throw new Error(`Invalid course object for GET: ${error}`)
 		}
 	}
 	try {
 		const body = validateGET(req.body)
-		let find = await prisma.section.findMany({
+		let find = await prisma.course.findMany({
 			where: {
 				auth_id: auth.id,
 				id: {
-					//If given a list of ids, return those sections
-					//Otherwise, return all sections
+					//If given a list of ids, return those courses
+					//Otherwise, return all courses
 					in:
-						body.section.id == undefined ||
-						!Array.isArray(body.section.id)
+						body.course.id == undefined ||
+						!Array.isArray(body.course.id)
 							? undefined
-							: body.section.id,
+							: body.course.id,
 				},
 			},
 			include: {
-				parent: true,
-				modules: {
+				sections: {
 					include: {
-						contents: true,
+						modules: {
+							include: {
+								contents: true,
+							},
+						},
 					},
 				},
 			},
 		})
 		if (find.length == 0) {
-			throw new Error(`No sections found with ids: ${body.section.id}`)
+			throw new Error(`No courses found with ids: ${body.course.id}`)
 		}
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Sections(s) found successfully",
+			message: "Course(s) found successfully",
 			data: find,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -107,14 +115,15 @@ async function POST(
 		let schema = z.object({
 			course: z.object({
 				id: z.number(),
-			}),
-			section: z.object({
-				id: z.number(),
 				title: z.string(),
+				label: z.string().optional(),
 				summary: z.string().optional(),
-				order: z.string(),
+				icon: z.string().optional(),
 				visible: z.boolean(),
 				url: z.string().optional(),
+				namespace: z.string().optional(),
+				category: z.string().optional(),
+				tags: z.string().optional(),
 				version: z.string(),
 				meta: z.record(z.any()).optional(),
 			}),
@@ -123,22 +132,17 @@ async function POST(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid section object for POST: ${error}`)
+			throw new Error(`Invalid course object for POST: ${error}`)
 		}
 	}
 	try {
 		const body = validatePOST(req.body)
-		let create = await prisma.section.create({
+		let create = await prisma.course.create({
 			data: {
-				...body.section,
+				...body.course,
 				auth: {
 					connect: {
 						id: auth.id,
-					},
-				},
-				parent: {
-					connect: {
-						id: body.course.id,
 					},
 				},
 			},
@@ -146,12 +150,11 @@ async function POST(
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Sections created successfully",
+			message: "Courses created successfully",
 			data: create,
 		})
 	} catch (error: any) {
-		if (error.code == "P2025")
-			error.message = `Parent course id:${req.body.course.id} not found in-sync with Orbite`
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -168,14 +171,18 @@ async function PATCH(
 ) {
 	function validatePATCH(body: any) {
 		let schema = z.object({
-			section: z.object({
+			course: z.object({
 				id: z.number(),
-				title: z.string(),
+				title: z.string().optional(),
+				label: z.string().optional(),
 				summary: z.string().optional(),
-				order: z.string(),
-				visible: z.boolean(),
+				icon: z.string().optional(),
+				visible: z.boolean().optional(),
 				url: z.string().optional(),
-				version: z.string(),
+				namespace: z.string().optional(),
+				category: z.string().optional(),
+				tags: z.string().optional(),
+				version: z.string(), // Require version to be updated
 				meta: z.record(z.any()).optional(),
 			}),
 		})
@@ -183,27 +190,28 @@ async function PATCH(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid section object for PATCH: ${error}`)
+			throw new Error(`Invalid course object for PATCH: ${error}`)
 		}
 	}
 	try {
 		const body = validatePATCH(req.body)
-		let update = await prisma.section.update({
+		let update = await prisma.course.update({
 			where: {
 				auth_id: auth.id,
-				id: body.section.id,
+				id: body.course.id,
 			},
 			data: {
-				...body.section,
+				...body.course,
 			},
 		})
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Sections updated successfully",
+			message: "Courses updated successfully",
 			data: update,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,
@@ -220,7 +228,7 @@ async function DELETE(
 ) {
 	function validateDELETE(body: any) {
 		let schema = z.object({
-			section: z.object({
+			course: z.object({
 				id: z.array(z.number()),
 			}),
 		})
@@ -228,29 +236,36 @@ async function DELETE(
 			return schema.parse(body)
 		} catch (error) {
 			console.log(error)
-			throw new Error(`Invalid section object for DELETE: ${error}`)
+			throw new Error(`Invalid course object for DELETE: ${error}`)
 		}
 	}
 	try {
 		const body = validateDELETE(req.body)
-		let del = await prisma.section.deleteMany({
+		//Delete Embeddings by section.id
+		for (let i = 0; i < body.course.id.length; i++) {
+			await deleteEmbedding(auth.handle, body.course.id[i], "course")
+		}
+		let del = await prisma.course.deleteMany({
 			where: {
 				auth_id: auth.id,
 				id: {
-					in: body.section.id,
+					in: body.course.id,
 				},
 			},
 		})
 		if (del.count == 0) {
-			throw new Error(`No sections found with ids: ${body.section.id}`)
+			throw new Error(`No courses found with ids: ${body.course.id}`)
 		}
+		//Cascade cleanup
+		await cascadeCleanup(auth.id)
 		res.status(200).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: true,
-			message: "Sections deleted successfully",
+			message: "Courses deleted successfully",
 			data: del,
 		})
 	} catch (error: any) {
+		console.log(error)
 		return res.status(400).json({
 			route: `${req.query.method}::${req.url}`,
 			isSuccess: false,

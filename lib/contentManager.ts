@@ -34,6 +34,7 @@ const schema = z.object({
 				title: z.string(),
 				summary: z.string().optional(),
 				order: z.string(),
+				sequence: z.string().optional(),
 				visible: z.boolean(),
 				url: z.string().optional(),
 				version: z.string(),
@@ -43,7 +44,6 @@ const schema = z.object({
 				id: z.number(),
 				title: z.string(),
 				summary: z.string().optional(),
-				order: z.string(),
 				visible: z.boolean(),
 				url: z.string().optional(),
 				version: z.string(),
@@ -57,7 +57,7 @@ const schema = z.object({
 					visible: z.boolean(),
 					size: z.number().optional(),
 					mimetype: z.string().optional(),
-					modified_at: z.string().optional(),
+					created_at: z.string().optional(),
 					url: z.string().optional(),
 					version: z.string(),
 					meta: z.record(z.any()).optional(),
@@ -362,7 +362,7 @@ export async function deleteContent(
 					"[Debugging]"
 				)} :: Deleting embedding for content id:${id}`
 			)
-			const success = await deleteEmbedding(auth.handle, id)
+			const success = await deleteEmbedding(auth.handle, id, "content")
 
 			console.log(success)
 			if (!success) {
@@ -374,55 +374,6 @@ export async function deleteContent(
 			}
 		}
 
-		// //Find the documents
-		// const ids = content_ids
-		// const contents = await prisma.content.findMany({
-		// 	where: {
-		// 		auth_id: auth.id,
-		// 		id: {
-		// 			in: ids,
-		// 		},
-		// 	},
-		// })
-
-		// if (contents.length == 0) {
-		// 	throw new ContentManagerError(`Unable to find content`, null, ids)
-		// }
-
-		// const slices = contents.map((i) => i.slice_ids.split(","))
-
-		// for (let idx = 0; idx < slices.length; idx++) {
-		// 	const _slices = slices[idx]
-
-		// 	//Delete embedding
-		// 	console.log(
-		// 		`${chalk.magenta(
-		// 			"[Debugging]"
-		// 		)} :: Deleting embedding for file ${idx}`
-		// 	)
-		// 	const success = await deleteEmbedding(auth.handle, _slices)
-		// 	console.log(success)
-		// 	if (!success) {
-		// 		throw new ContentManagerError(
-		// 			`Unable to delete embedding`,
-		// 			null,
-		// 			{ _id: ids[idx], _slices: _slices }
-		// 		)
-		// 	}
-
-		// 	if (success.length !== _slices.length) {
-		// 		throw new ContentManagerError(
-		// 			`Unable to delete some embedding`,
-		// 			null,
-		// 			{
-		// 				_id: ids[idx],
-		// 				_slices: _slices.filter((i: string) =>
-		// 					success.includes(i)
-		// 				),
-		// 			}
-		// 		)
-		// 	}
-		// }
 		//Delete documents from db
 		console.log(
 			`${chalk.magenta(
@@ -446,35 +397,7 @@ export async function deleteContent(
 		}
 
 		//Check if course,section,activity is empty and delete if so
-		console.log(
-			`${chalk.magenta(
-				"[Debugging]"
-			)} :: Cleaning up empty courses, sections and modules`
-		)
-		await prisma.module.deleteMany({
-			where: {
-				auth_id: auth.id,
-				contents: {
-					none: {},
-				},
-			},
-		})
-		await prisma.section.deleteMany({
-			where: {
-				auth_id: auth.id,
-				modules: {
-					none: {},
-				},
-			},
-		})
-		await prisma.course.deleteMany({
-			where: {
-				auth_id: auth.id,
-				sections: {
-					none: {},
-				},
-			},
-		})
+		await cascadeCleanup(auth.id)
 
 		console.log(
 			`${chalk.magenta(
@@ -501,6 +424,38 @@ export async function deleteContent(
 			data: error instanceof ContentManagerError ? error.data : {},
 		})
 	}
+}
+
+export async function cascadeCleanup(auth_id: number) {
+	console.log(
+		`${chalk.magenta(
+			"[Debugging]"
+		)} :: Cleaning up empty courses, sections and modules`
+	)
+	await prisma.module.deleteMany({
+		where: {
+			auth_id: auth_id,
+			contents: {
+				none: {},
+			},
+		},
+	})
+	await prisma.section.deleteMany({
+		where: {
+			auth_id: auth_id,
+			modules: {
+				none: {},
+			},
+		},
+	})
+	await prisma.course.deleteMany({
+		where: {
+			auth_id: auth_id,
+			sections: {
+				none: {},
+			},
+		},
+	})
 }
 
 export async function getContent(

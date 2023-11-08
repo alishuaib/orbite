@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types"
 import withApiKeyVerification, {
 	Authorization,
+	logApiRequest,
 } from "@/lib/middleware/checkAuth"
 import prisma from "@/lib/prisma-client"
 import { z } from "zod"
@@ -9,8 +10,8 @@ import { z } from "zod"
 // Course API
 //
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+	logApiRequest(req)
 	const { query } = req
-	console.log("api/v1/user", query.method, req.method)
 	if (query.method == undefined || req.method != "POST") {
 		console.log("No method provided in query")
 		res.status(400).json({
@@ -54,7 +55,11 @@ async function GET(req: NextApiRequest, res: NextApiResponse) {
 				id: body.user.id,
 			},
 			include: {
-				config: true,
+				config: {
+					include: {
+						chat_config: true,
+					},
+				},
 				auth: true,
 			},
 		})
@@ -100,7 +105,11 @@ async function DELETE(req: NextApiRequest, res: NextApiResponse) {
 				id: body.user.id,
 			},
 			include: {
-				config: true,
+				config: {
+					include: {
+						chat_config: true,
+					},
+				},
 				auth: true,
 			},
 		})

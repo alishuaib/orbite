@@ -1,6 +1,5 @@
 import "./globals.css"
 import { Lato } from "next/font/google"
-import MainContext from "./context"
 import { ClerkProvider } from "@clerk/nextjs"
 
 const lato = Lato({
@@ -34,9 +33,7 @@ export default function RootLayout({
 				lang="en"
 				className={lato.className}
 			>
-				<MainContext>
-					<body>{children}</body>
-				</MainContext>
+				<body>{children}</body>
 			</html>
 		</ClerkProvider>
 	)
