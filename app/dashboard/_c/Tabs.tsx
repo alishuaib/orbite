@@ -7,7 +7,7 @@ import {
 	useEffect,
 	useState,
 } from "react"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { readApi, writeApi } from "@/app/_context/api"
 import { UserButton, UserProfile, useClerk } from "@clerk/nextjs"
 import * as Icon from "@phosphor-icons/react"
@@ -46,7 +46,7 @@ export default function DashboardTabs() {
 		{
 			name: "Settings",
 			path: "/dashboard/settings",
-			onClick: () => {
+			onClick: (i: number) => {
 				setOverlay(
 					<div className="h-full w-full py-24 flex items-center justify-center pointer-events-none">
 						<div className="relative h-full w-fit">
@@ -66,7 +66,11 @@ export default function DashboardTabs() {
 			},
 		},
 	]
-
+	const params = useSearchParams()
+	useEffect(() => {
+		const session_id = params?.get("session_id")
+		console.log(session_id)
+	}, [])
 	function handleClick(url: string, i: number) {
 		router.push(url)
 		setActive(i)
@@ -75,6 +79,12 @@ export default function DashboardTabs() {
 		const index = tabs.findIndex((tab) => tab.path == pathname)
 		if (index != -1) setActive(index)
 	}, [pathname])
+
+	useEffect(() => {
+		if (window.location.href.includes("#/billing")) {
+			tabs.find((tab) => tab.name == "Settings")?.onClick(-1)
+		}
+	}, [active])
 	return (
 		<div className="flex border-b border-zinc-300 px-10">
 			{tabs.map((tab, i) => (

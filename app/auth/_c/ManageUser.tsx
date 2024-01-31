@@ -43,9 +43,7 @@ export function AccountButton() {
 				}
 				url="billing"
 			>
-				<div>
-					<h1>Plan & Billing</h1>
-				</div>
+				<BillingPage />
 			</UserButton.UserProfilePage>
 		</UserButton>
 	)

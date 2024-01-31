@@ -1,7 +1,7 @@
 "use client"
 
 import { readApi, writeApi } from "@/app/_context/api"
-
+import { Toaster } from "sonner"
 export default function Overlay() {
 	const { overlay } = readApi()!
 	const { setOverlay } = writeApi()!
@@ -23,6 +23,10 @@ export default function Overlay() {
 			} transition-all flex fixed z-100 h-screen w-screen bg-black/60 p-10`}
 		>
 			{overlay}
+			<Toaster
+				position="bottom-center"
+				richColors
+			/>
 		</section>
 	)
 }
