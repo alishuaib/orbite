@@ -1,7 +1,10 @@
+"use client"
 import ApiContext from "@/app/_context/api"
 import DashboardHeader from "./_c/Header"
 import DashboardTabs from "./_c/Tabs"
 import Overlay from "./_c/Overlay"
+
+import { loadStripe } from "@stripe/stripe-js"
 
 export default function DashboardLayout({
 	children,

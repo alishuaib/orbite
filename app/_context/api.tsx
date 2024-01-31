@@ -261,6 +261,81 @@ export default function ApiContext({
 		return data
 	}
 
+	async function stripeCheckout(priceId: string) {
+		try {
+			const query = await fetch(`/api/auth/stripe/checkout?method=POST`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"x-orbite-api-key": user?.auth.API_KEY as string,
+				},
+				body: JSON.stringify({
+					plan: {
+						id: priceId,
+					},
+				}),
+			})
+
+			const data = await query.json()
+
+			if (process.env.NODE_ENV == "development") console.log(data)
+
+			return data.data
+		} catch (error) {
+			console.error(error)
+			return null
+		}
+	}
+
+	async function stripeCheckoutSession(session_id: string) {
+		try {
+			const query = await fetch(`/api/auth/stripe/checkout?method=GET`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"x-orbite-api-key": user?.auth.API_KEY as string,
+				},
+				body: JSON.stringify({
+					session_id: session_id,
+				}),
+			})
+
+			const data = await query.json()
+
+			if (process.env.NODE_ENV == "development") console.log(data)
+
+			return data.data
+		} catch (error) {
+			console.error(error)
+			return null
+		}
+	}
+
+	async function stripeIntent(body: object) {
+		try {
+			const query = await fetch(
+				`/api/auth/stripe/subscription?method=POST`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"x-orbite-api-key": user?.auth.API_KEY as string,
+					},
+					body: JSON.stringify(body),
+				}
+			)
+
+			const data = await query.json()
+
+			if (process.env.NODE_ENV == "development") console.log(data)
+
+			return data.data
+		} catch (error) {
+			console.error(error)
+			return null
+		}
+	}
+
 	//Unimplemneted file upload feature
 	async function uploadContent(
 		form: FormData,
@@ -344,6 +419,8 @@ export default function ApiContext({
 					setChatConfig,
 					c,
 					setOverlay,
+					stripeCheckout,
+					stripeCheckoutSession,
 				}}
 			>
 				{children}
@@ -396,4 +473,6 @@ type WriteContextType = {
 	>
 	c: (attribute: string, blend: string, color?: 0 | 1) => string
 	setOverlay: React.Dispatch<React.SetStateAction<React.ReactNode>>
+	stripeCheckout: (priceId: string) => Promise<object | null>
+	stripeCheckoutSession: (session_id: string) => Promise<object | null>
 }

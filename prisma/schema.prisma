@@ -65,6 +65,11 @@ model User{
   //Orbite fields
   is_onboarded Boolean @default(false)
 
+  //Stripe fields
+  stripe_id String? @unique
+  plan Plan? @relation(name:"UserPlan",fields: [plan_id], references: [id])
+  plan_id String?
+
   //Relations
   config UserConfig @relation(name:"UserConfig",fields: [config_id], references: [id], onDelete: Cascade)
   config_id Int @unique
@@ -73,6 +78,7 @@ model User{
   auth_id Int @unique
 
   @@index([id])
+  @@index([plan_id])
 }
 model UserConfig{
   //Clerk Unique ID
@@ -85,6 +91,14 @@ model UserConfig{
 
   chat_config ChatCustomization? @relation(name:"ChatCustomization" ,fields: [chat_config_id], references: [id] , onDelete: Cascade)
   chat_config_id Int? @unique
+}
+
+model Plan{
+  id String @id
+  name String
+  description String?
+  price Float
+  user User[] @relation(name:"UserPlan")
 }
 
 model ChatCustomization{
