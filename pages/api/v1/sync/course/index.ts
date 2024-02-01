@@ -85,7 +85,7 @@ async function GET(
 				},
 			},
 		})
-		if (find.length == 0) {
+		if (find.length == 0 && body.course.id != undefined) {
 			throw new Error(`No courses found with ids: ${body.course.id}`)
 		}
 		res.status(200).json({

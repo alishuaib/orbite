@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	webpack: (config) => {
+		if (process.env.NEXT_OUTPUT_MODE !== "export" || !config.module) {
+			return config
+		}
+		config.module.rules?.push({
+			test: /src\/app\/hub/,
+			loader: "ignore-loader",
+		})
+		return config
+	},
 	rewrites: async () => {
 		return [
 			{

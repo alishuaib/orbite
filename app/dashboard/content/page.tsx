@@ -38,6 +38,10 @@ export default function DashboardHeader() {
 
 		fetchCourses()
 
+		// if (!courses || courses?.length == 0) {
+		// 	setError("No Content Synched")
+		// }
+
 		return () => {
 			isCancelled = true
 		}

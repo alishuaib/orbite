@@ -87,7 +87,11 @@ async function userCreated(
 				primary_web3_wallet_id: data.primary_web3_wallet_id,
 				is_onboarded: false,
 				config: {
-					create: {},
+					create: {
+						chat_config: {
+							create: {},
+						},
+					},
 				},
 				auth: {
 					create: {},
@@ -173,6 +177,10 @@ async function userDeleted(
 		console.log(`User ${data.id} deleted successfully`)
 		res.status(201).json({})
 	} catch (error: any) {
+		if (error.code == "P2025") {
+			console.log(`User ${data.id} does not exist (No Record)`)
+			return res.status(201).json({})
+		}
 		console.log(error.message, error.code)
 		return res.status(400).json({})
 	}

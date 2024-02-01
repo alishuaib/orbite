@@ -33,7 +33,7 @@ module.exports = {
 	// 	{
 	// 		pattern: /^to-/,
 	// 	},
-	//   {
+	// 	{
 	// 		pattern: /^ring-/,
 	// 	},
 	// ],
