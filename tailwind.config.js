@@ -14,28 +14,28 @@ module.exports = {
 			},
 		},
 	},
-	// safelist: [
-	// 	{
-	// 		pattern: /^bg-/,
-	// 	},
-	// 	{
-	// 		pattern: /^border-/,
-	// 	},
-	// 	{
-	// 		pattern: /^text-/,
-	// 	},
-	// 	{
-	// 		pattern: /^shadow-/,
-	// 	},
-	// 	{
-	// 		pattern: /^from-/,
-	// 	},
-	// 	{
-	// 		pattern: /^to-/,
-	// 	},
-	// 	{
-	// 		pattern: /^ring-/,
-	// 	},
-	// ],
+	safelist: [
+		{
+			pattern: /^bg-/,
+		},
+		{
+			pattern: /^border-/,
+		},
+		{
+			pattern: /^text-/,
+		},
+		{
+			pattern: /^shadow-/,
+		},
+		{
+			pattern: /^from-/,
+		},
+		{
+			pattern: /^to-/,
+		},
+		{
+			pattern: /^ring-/,
+		},
+	],
 	plugins: [],
 }
