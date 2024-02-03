@@ -90,6 +90,7 @@ async function POST(
 					width: "520px",
 					height: "100vh",
 					border: "none",
+					backgroundColor: "transparent",
 					// pointerEvents: "none",
 				}}
 				// src={`${baseUrl}/plugin/embed?session=${session}`}
