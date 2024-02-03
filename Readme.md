@@ -46,41 +46,6 @@ Check out a live demo with pre uploaded content at [orbite.app/demo](https://orb
 -   [Roadmap] CLI tool / service for unsupported LMS integrations
 -   [Roadmap] Support for more LMS systems (Totara, Brightspace, Blackboard)
 
-## 📚 Tech Stack
-
-<div style="display:flex;flex-direction:column">
-    <h3>Application</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Typescript</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">React</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">NextJS 13</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Tailwind CSS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Prisma ORM</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">MySQL DB (PlanetScale)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Weaviate VectorDB</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Clerk (Auth)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">JWT (Session)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">OpenAI (LLM)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Zod (API Validator)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Vercel</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">AWS EC2</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">AWS S3</div>
-    </div>
-    <h3>Moodle 4.0+ Plugin</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">PHP</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">JS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Mustache (Templating)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">HTML/CSS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Bootstrap</div>
-    </div>
-    <h3>Test Enviorment</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Docker</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">ThunderClient (API Test)</div>
-    </div>
-</div>
-
 ## 🤝 Contributing
 
 ### ⚠ You will need to setup the following services
