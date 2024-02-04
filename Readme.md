@@ -18,13 +18,18 @@ AI Powered Chat 🤝 Search - all in one integration!
 
 ## 🚀 Quick Start
 
-### Video Demonstration [2 minutes]
+### Video Demonstration [5 minutes]
 
-Watch this 2 minute video for a live demonstration of Orbite
+Watch this 5 minute video for a demonstration of Orbite
 
-### View Live Demo
-
-Check out a live demo with pre uploaded content at [orbite.app/demo](https://orbite.app/demo)
+<div>
+    <a href="https://www.loom.com/share/ed995464439b48bba23ada239f58d41c">
+      <p>Orbite: AI Chat Assistance for LMS Systems</p>
+    </a>
+    <a href="https://www.loom.com/share/ed995464439b48bba23ada239f58d41c">
+      <img style="max-width:200px;" src="https://cdn.loom.com/sessions/thumbnails/ed995464439b48bba23ada239f58d41c-1707021974318-with-play.gif">
+    </a>
+  </div>
 
 ### Setup
 
@@ -45,41 +50,6 @@ Check out a live demo with pre uploaded content at [orbite.app/demo](https://orb
 -   [Roadmap] Topic modeling to view common questions and topics, providing instructors with a way to improve gaps in course content
 -   [Roadmap] CLI tool / service for unsupported LMS integrations
 -   [Roadmap] Support for more LMS systems (Totara, Brightspace, Blackboard)
-
-## 📚 Tech Stack
-
-<div style="display:flex;flex-direction:column">
-    <h3>Application</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Typescript</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">React</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">NextJS 13</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Tailwind CSS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Prisma ORM</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">MySQL DB (PlanetScale)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Weaviate VectorDB</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Clerk (Auth)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">JWT (Session)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">OpenAI (LLM)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Zod (API Validator)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Vercel</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">AWS EC2</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">AWS S3</div>
-    </div>
-    <h3>Moodle 4.0+ Plugin</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">PHP</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">JS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Mustache (Templating)</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">HTML/CSS</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Bootstrap</div>
-    </div>
-    <h3>Test Enviorment</h3> 
-    <div style="display:flex; flex-wrap: wrap; gap:.5em">
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">Docker</div>
-        <div style="background-color: #181818;padding: 5px 10px;border-radius: 3px">ThunderClient (API Test)</div>
-    </div>
-</div>
 
 ## 🤝 Contributing
 
