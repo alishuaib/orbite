@@ -18,13 +18,18 @@ AI Powered Chat 🤝 Search - all in one integration!
 
 ## 🚀 Quick Start
 
-### Video Demonstration [2 minutes]
+### Video Demonstration [5 minutes]
 
-Watch this 2 minute video for a live demonstration of Orbite
+Watch this 5 minute video for a demonstration of Orbite
 
-### View Live Demo
-
-Check out a live demo with pre uploaded content at [orbite.app/demo](https://orbite.app/demo)
+<div>
+    <a href="https://www.loom.com/share/ed995464439b48bba23ada239f58d41c">
+      <p>Orbite: AI Chat Assistance for LMS Systems</p>
+    </a>
+    <a href="https://www.loom.com/share/ed995464439b48bba23ada239f58d41c">
+      <img style="max-width:200px;" src="https://cdn.loom.com/sessions/thumbnails/ed995464439b48bba23ada239f58d41c-1707021974318-with-play.gif">
+    </a>
+  </div>
 
 ### Setup
 

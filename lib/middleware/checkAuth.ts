@@ -28,7 +28,7 @@ export function logApiRequest(req: NextApiRequest) {
 	const protocol = req.headers["x-forwarded-proto"] || "http"
 	const origin = `${protocol}://${req.headers.host}`
 
-	const apiKey = req.headers["x-orbite-api-key"] as string
+	const apiKey = req.headers["x-orbite-api-key"] as string | undefined
 	console.info(
 		chalk.bgCyan.black(
 			req.url,
@@ -42,7 +42,7 @@ export function logApiRequest(req: NextApiRequest) {
 		chalk.yellow("auth"),
 		process.env.NODE_ENV == "development"
 			? apiKey
-			: `${apiKey.split("-")[0]}-****-****-****-************`
+			: `${apiKey?.split("-")[0]}-****-****-****-************`
 	)
 }
 
